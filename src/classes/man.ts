@@ -98,14 +98,14 @@ export default class Man {
         linuxVersion: pbPackage.linuxArch,
         nodeVersion: pbPackage.nodeVersion,
       }
-      fs.writeFileSync(tempMd, mustache.render(template, view))
+      fs.writeFileSync(tempMd, mustache.render(template, view), 'utf8')
     }
   }
 
   convertToMan() {
     if (fs.existsSync('pb.yaml')) {
       let pbPackage = {} as IPackage
-      pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
+      pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
 
       const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
 

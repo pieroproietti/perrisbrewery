@@ -9,7 +9,7 @@ import yaml = require('js-yaml')
 export default function convertHtml() {
   if (fs.existsSync('pb.yaml')) {
     let pbPackage = {} as IPackage
-    pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
+    pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
 
     const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
 
