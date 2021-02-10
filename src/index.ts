@@ -1,0 +1,64 @@
+/* eslint-disable no-negated-condition */
+/* eslint-disable no-process-exit */
+/* eslint-disable no-console */
+import { Command, flags } from '@oclif/command'
+import path = require('path')
+import fs = require('fs')
+import yaml = require('js-yaml')
+
+import Utils from './classes/utils'
+import Dir from './classes/dir'
+import Dpkg from './classes/dpkg'
+import Man from './classes/man'
+
+import { IPackage } from './interfaces'
+
+
+class Perrisbrewery extends Command {
+  static description = 'describe the command here'
+
+  static flags = {
+    // add --version flag to show CLI version
+    version: flags.version({ char: 'v' }),
+    help: flags.help({ char: 'h' }),
+    force: flags.boolean({ char: 'f' }),
+  }
+
+  static args = [{ name: 'pathSource' }]
+
+  async run() {
+    const { args, flags } = this.parse(Perrisbrewery)
+
+    const u = new Utils()
+    u.titles(this.id + ' ' + this.argv)
+
+    let pbPackage = {} as IPackage
+
+    this.log()
+
+    let pathSource = './'
+    if (args.pathSource !== undefined) {
+      pathSource = args.pathSource
+    }
+
+    this.log('-pathSource: ' + pathSource)
+
+    const dpkg = new Dpkg()
+    const dir = new Dir()
+    const filenames = dir.analyze(pathSource)
+
+    const man = new Man(pathSource + '/README.md')
+    filenames.forEach((file: string) => {
+      this.log('-file: ' + file)
+      pbPackage = dpkg.analyze(pathSource + 'dist/deb/' + file)
+      fs.writeFileSync('pb.yaml', yaml.dump(pbPackage), 'utf-8')
+      dpkg.disclose()
+      dpkg.makeScripts()
+      dpkg.makeControl()
+      man.create()
+      dpkg.close(pbPackage)
+    })
+  }
+}
+
+export = Perrisbrewery
