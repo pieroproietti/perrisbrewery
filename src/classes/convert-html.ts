@@ -1,0 +1,37 @@
+/**
+ * rifacimento di makemain in ts
+ */
+
+import fs = require('fs')
+import {IPackage} from '../interfaces'
+import yaml = require('js-yaml')
+
+export default function convertHtml() {
+  if (fs.existsSync('pb.yaml')) {
+    let pbPackage = {} as IPackage
+    pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
+
+    const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
+
+    const  vfile = require('to-vfile')
+    const  report = require('vfile-reporter')
+    const  unified = require('unified')
+    const  markdown = require('remark-parse')
+    const  remark2rehype = require('remark-rehype')
+    const  doc = require('rehype-document')
+    const  format = require('rehype-format')
+    const  html = require('rehype-stringify')
+
+    unified()
+    .use(markdown)
+    .use(remark2rehype)
+    .use(doc)
+    .use(format)
+    .use(html)
+    .process(vfile.readSync(tempMd), function (err: any, file: any) {
+      console.error(report(err || file))
+      file.extname = '.html'
+      vfile.writeSync(file)
+    })
+  }
+}

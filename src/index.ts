@@ -1,8 +1,7 @@
 /* eslint-disable no-negated-condition */
 /* eslint-disable no-process-exit */
 /* eslint-disable no-console */
-import { Command, flags } from '@oclif/command'
-import path = require('path')
+import {Command, flags} from '@oclif/command'
 import fs = require('fs')
 import yaml = require('js-yaml')
 
@@ -11,23 +10,23 @@ import Dir from './classes/dir'
 import Dpkg from './classes/dpkg'
 import Man from './classes/man'
 
-import { IPackage } from './interfaces'
-
+import {IPackage} from './interfaces'
+import convertHtml from './classes/convert-html'
 
 class Perrisbrewery extends Command {
   static description = 'describe the command here'
 
   static flags = {
     // add --version flag to show CLI version
-    version: flags.version({ char: 'v' }),
-    help: flags.help({ char: 'h' }),
-    force: flags.boolean({ char: 'f' }),
+    version: flags.version({char: 'v'}),
+    help: flags.help({char: 'h'}),
+    force: flags.boolean({char: 'f'}),
   }
 
-  static args = [{ name: 'pathSource' }]
+  static args = [{name: 'pathSource'}]
 
   async run() {
-    const { args, flags } = this.parse(Perrisbrewery)
+    const {args} = this.parse(Perrisbrewery)
 
     const u = new Utils()
     u.titles(this.id + ' ' + this.argv)
@@ -55,8 +54,11 @@ class Perrisbrewery extends Command {
       dpkg.disclose()
       dpkg.makeScripts()
       dpkg.makeControl()
-      man.create()
+      man.createMd()
+      man.convertToMan()
+      convertHtml()
       dpkg.close(pbPackage)
+      
     })
   }
 }

@@ -3,15 +3,14 @@
 /* eslint-disable complexity */
 /* eslint-disable no-console */
 /**
- * rifacimento di makemain in ts
+ * man
  */
 
 import fs = require('fs')
-import shx = require('shelljs')
 import mustache = require('mustache')
 import yaml = require('js-yaml')
 
-import { IPackage } from '../interfaces'
+import {IPackage} from '../interfaces'
 
 /**
  *
@@ -25,7 +24,7 @@ export default class Man {
     this.readmeName = readmeName
   }
 
-  create(removeTriploApice = false) {
+  createMd() {
     const readme = fs.readFileSync(this.readmeName, 'utf-8').split('\n')
 
     if (fs.existsSync('pb.yaml')) {
@@ -49,7 +48,7 @@ export default class Man {
       for (let i = 0; i < readme.length; i++) {
         let isComment = false
         if (readme[i].includes('<!--')) {
-          isComment = true
+          isComment = false
 
           if (readme[i].includes(tocStart)) {
             isToc = true
@@ -73,41 +72,23 @@ export default class Man {
           }
         }
 
-        // Aggiunge le linee
+        // Aggiunge la linea alla sezione
         if (isToc && !isComment) {
           toc += readme[i] + '\n'
         }
         if (isUsage && !isComment) {
-          if (readme[i].includes('`')) {
-            if (!readme[i].includes('```')) {
-              // readme[i] = readme[i].replace('`', '')
-              // readme[i] = readme[i].replace('`', '')
-            }
-          }
           usage += readme[i] + '\n'
         }
         if (isCommands && !isComment) {
-          // if (!readme[i].includes('See code')) {
-            if (readme[i].includes('`')) {
-              if (!readme[i].includes('```')) {
-                // Rimuove ` attorno ai comandi
-                // readme[i] = readme[i].replace('`', '')
-                // readme[i] = readme[i].replace('`', '')
-              } else if (removeTriploApice) {
-                // readme[i] = readme[i].replace('```', '')
-              }
-            }
-            commands += readme[i] + '\n'
-          // }
+          commands += readme[i] + '\n'
         }
       }
       toc = ''
 
       /**
-        * Creazione della versione markdown per man
+        * Creazione della versione markdown di man
         */
       const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
-      const destMan = pbPackage.tempDir + '/DEBIAN/'
       const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
       const view = {
         toc: toc,
@@ -118,22 +99,30 @@ export default class Man {
         nodeVersion: pbPackage.nodeVersion,
       }
       fs.writeFileSync(tempMd, mustache.render(template, view))
+    }
+  }
 
-      // let cmd = 'ronn --roff --manual=\'eggs manual\' --organization=penguins-eggs.net --style=toc,80c ' + tempMd + ' --section 1 -o ' + destMan
-      // shx.exec(cmd)
+  convertToMan() {
+    if (fs.existsSync('pb.yaml')) {
+      let pbPackage = {} as IPackage
+      pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
 
-      // cmd = 'rm ' + tempMd
-      // shx.exec(cmd)
+      const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
+
       const vfile = require('to-vfile')
+
       const unified = require('unified')
+
       const markdown = require('remark-parse')
+
       const gfm = require('remark-gfm')
+
       const man = require('remark-man')
 
       const optMan = {
-        name: 'uova',
+        name: 'eggs',
         section: '1',
-        description: 'uova e pulcini!',
+        description: 'eggs manpage',
         version: pbPackage.version,
       }
 
@@ -141,11 +130,12 @@ export default class Man {
       .use(markdown)
       .use(gfm, {singletilde: false, tripletildes: false})
       .use(man, optMan)
-        .process(vfile.readSync(tempMd), function (err: any, file: any) {
-          if (err) throw err
-          file.extname = '.1'
-          vfile.writeSync(file)
-        })
+      .process(vfile.readSync(tempMd), function (err: any, file: any) {
+        if (err) throw err
+        file.extname = '.1'
+        vfile.writeSync(file)
+      })
     }
   }
 }
+
