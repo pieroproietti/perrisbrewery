@@ -7,5 +7,6 @@ export interface IPackage {
   linuxArch: string;
   nodeVersion: string;
   tempDir: string;
+  destDir: string;
   htmlDir: string;
 }

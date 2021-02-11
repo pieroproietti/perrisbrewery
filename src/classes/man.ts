@@ -9,7 +9,7 @@
 import fs = require('fs')
 import mustache = require('mustache')
 import yaml = require('js-yaml')
-
+import shx = require('shelljs')
 import {IPackage} from '../interfaces'
 
 /**
@@ -25,11 +25,11 @@ export default class Man {
   }
 
   createMd() {
-    const readme = fs.readFileSync(this.readmeName, 'utf-8').split('\n')
-
     if (fs.existsSync('pb.yaml')) {
       let pbPackage = {} as IPackage
       pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
+
+      const readme = fs.readFileSync(this.readmeName, 'utf-8').split('\n')
 
       let toc = ''
       const tocStart = '<!-- toc -->'
@@ -80,16 +80,19 @@ export default class Man {
           usage += readme[i] + '\n'
         }
         if (isCommands && !isComment) {
-          commands += readme[i] + '\n'
+          if (!readme[i].includes('See code:')) {
+            commands += readme[i] + '\n'
+          }
         }
       }
       toc = ''
+      usage = usage.toString()
 
       /**
         * Creazione della versione markdown di man
         */
-      const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
-      const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'ascii')
+      const tempMd = pbPackage.destDir + '/debian/' + pbPackage.name + '.md'
+      const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
       const view = {
         toc: toc,
         usage: usage,
@@ -98,6 +101,7 @@ export default class Man {
         linuxVersion: pbPackage.linuxArch,
         nodeVersion: pbPackage.nodeVersion,
       }
+
       fs.writeFileSync(tempMd, mustache.render(template, view), 'utf8')
     }
   }
@@ -107,7 +111,8 @@ export default class Man {
       let pbPackage = {} as IPackage
       pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
 
-      const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
+      const destMd = pbPackage.destDir + '/debian/' + pbPackage.name + '.md'
+      const destMan = pbPackage.destDir + '/debian/' + pbPackage.name + '.1'
 
       const vfile = require('to-vfile')
 
@@ -128,13 +133,18 @@ export default class Man {
 
       unified()
       .use(markdown)
-      .use(gfm, {singletilde: false, tripletildes: false})
+      .use(gfm)
       .use(man, optMan)
-      .process(vfile.readSync(tempMd), function (err: any, file: any) {
+      .process(vfile.readSync(destMd), function (err: any, file: any) {
         if (err) throw err
         file.extname = '.1'
         vfile.writeSync(file)
       })
+      // Compressione
+      shx.exec('gzip ' + destMan)
+      // Nome definitivo del manuale
+      shx.exec('rm '  + destMan)
+      shx.exec('mv ' + destMan + 'gz' + pbPackage.destDir + '/debian/manpage.1.ex')
     }
   }
 }

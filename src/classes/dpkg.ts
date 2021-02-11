@@ -4,12 +4,11 @@
  * perri's brewery
  *
  */
-
 import fs = require('fs')
 import shx = require('shelljs')
 import mustache = require('mustache')
 import path = require('path')
-import { IPackage } from '../interfaces'
+import {IPackage} from '../interfaces'
 
 export default class Dpkg {
   pbPackage = {} as IPackage
@@ -18,14 +17,13 @@ export default class Dpkg {
    * Riceve in ingresso un path o un file deb
    * @param debPackage
    */
-  analyze(debPackage = '') {
-    this.pbPackage.name = 'eggs'
+  analyze(pathSource = '') {
+    this.pbPackage.path = path.dirname(pathSource) + '/'
+    const debPackage = path.basename(pathSource)
 
-    this.pbPackage.path = path.dirname(debPackage) + '/'
-    debPackage = path.basename(debPackage)
-
-    this.pbPackage.sourceVersion = debPackage.substring(debPackage.indexOf('eggs_') + 5, debPackage.indexOf('eggs_') + 11)
-    this.pbPackage.buildVersion = debPackage.substring(debPackage.indexOf('eggs_') + 12, debPackage.indexOf('eggs_') + 13)
+    this.pbPackage.name = debPackage.substring(0, debPackage.indexOf('_'))
+    this.pbPackage.sourceVersion = debPackage.substring(debPackage.indexOf('_') + 1, debPackage.indexOf('-'))
+    this.pbPackage.buildVersion = debPackage.substring(debPackage.indexOf('-') + 1, debPackage.indexOf('-') + 2)
     this.pbPackage.linuxArch = 'i386'
     if (debPackage.includes('amd64')) {
       this.pbPackage.linuxArch = 'amd64'
@@ -33,9 +31,14 @@ export default class Dpkg {
     if (debPackage.includes('armel')) {
       this.pbPackage.linuxArch = 'armel'
     }
-    this.pbPackage.tempDir = `${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
-    this.pbPackage.nodeVersion = process.version
-
+    shx.exec('mkdir ./perrisbrewery/workdir')
+    this.pbPackage.tempDir = `./perrisbrewery/workdir/${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
+    this.pbPackage.destDir = `./perrisbrewery/workdir/${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}`
+    if (this.pbPackage.linuxArch === 'i386') {
+      this.pbPackage.nodeVersion = 'v8.17.0'
+    } else {
+      this.pbPackage.nodeVersion = process.version
+    }
     return this.pbPackage
   }
 
@@ -50,29 +53,66 @@ export default class Dpkg {
     }
     shx.exec(`mkdir ${this.pbPackage.tempDir} `)
     shx.exec(`dpkg-deb -R ${this.pbPackage.path}${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}.deb ${this.pbPackage.tempDir}`)
-    shx.exec(`cd ${this.pbPackage.tempDir}`)
-    shx.exec('dh_make -sc lgpl2 -e piero.proietti@gmail.com --createorig')
-    shx.exec('cd ..')
+
+    // Creo directory destinazione
+    shx.exec(`mkdir ${this.pbPackage.destDir}`)
+    let cmd = `cp ${this.pbPackage.tempDir}/usr ${this.pbPackage.destDir} -R`
+    console.log(cmd)
+    shx.exec(cmd)
+    const curDir = process.cwd()
+    process.chdir(this.pbPackage.destDir)
+    cmd = `dh_make -sc lgpl2 -e piero.proietti@gmail.com --createorig -p ${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion} --yes`
+    console.log(cmd)
+    shx.exec(cmd)
+    
+    // shx.exec('rm changelog')
+    // shx.exec('rm compat')
+    // shx.exec('rm control')
+    // shx.exec('rm copyright')
+    shx.exec('rm debian/*.cron.d.ex')
+    shx.exec('rm debian/*.doc-base.EX')
+    shx.exec('rm debian/*.docs')
+    // shx.exec('rm debian/manpage.1.ex')
+    shx.exec('rm debian/manpage.sgml.ex')
+    shx.exec('rm debian/manpage.xml.ex')
+    shx.exec('rm debian/menu.ex')
+    // shx.exec('rm debian/postinst.ex')
+    // shx.exec('rm debian/postrm.ex')
+    // shx.exec('rm debian/preinst.ex')
+    // shx.exec('rm debian/prerm.ex')
+    // shx.exec('rm debian/README.Debian')
+    // shx.exec('rm debian/README.source')
+    // shx.exec('rm debian/rules')
+    // shx.exec('rm debian/source')
+
+    process.chdir(curDir)
   }
 
   /**
    * 
    */
   makeScripts() {
-    shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.tempDir}/DEBIAN`)
+    console.log(process.cwd())
+    shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/debian/*`)
   }
 
   /**
    * makeControl
    */
   makeControl() {
-    const version = this.pbPackage.sourceVersion + '-' + this.pbPackage.buildVersion
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
     const view = {
-      version: version,
+      name: this.pbPackage.name,
+      version: this.pbPackage.sourceVersion + '-' + this.pbPackage.buildVersion,
+      section: 'main',
+      priority: 'standard',
       arch: this.pbPackage.linuxArch,
+      mantainer: 'artisan <piero.proietti@gmail.com>',
+      description: 'eggs Perri\'s Brewery edition. Remaster your system and distribuite it!',
+      depends: 'Depends: isolinux, syslinux, squashfs-tools, xorriso, live-boot, live-boot-initramfs-tools, dpkg-dev, rsync, xterm, whois, dosfstools, parted',
+      suggest: 'Suggest: calamares, qml-module-qtquick2, qml-module-qtquick-controls',
     }
-    fs.writeFileSync(`${this.pbPackage.tempDir}/DEBIAN/control`, mustache.render(template, view))
+    fs.writeFileSync(`${this.pbPackage.destDir}/debian/control`, mustache.render(template, view))
   }
 
   /**
@@ -80,7 +120,7 @@ export default class Dpkg {
    */
   close(pbPackage: IPackage) {
     this.pbPackage = pbPackage
-    shx.exec(`dpkg-deb --build ${this.pbPackage.tempDir}`)
+    shx.exec(`dpkg-deb --build ${this.pbPackage.destDir}`)
     // shx.exec(`rm ${this.pbPackage.tempDir} -rf`)
   }
 }
