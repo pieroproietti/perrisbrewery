@@ -43,7 +43,7 @@ class Perrisbrewery extends Command {
       pathSource = args.pathSource
     }
     
-    if (!fs.existsSync(`${here}/perrisbrewery`)) {r s
+    if (!fs.existsSync(`${here}/perrisbrewery`)) {
       fs.mkdirSync(`${here}/perrisbrewery`)
       fs.mkdirSync(`${here}/perrisbrewery/workdir`)
       shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/template`), `${here}/perrisbrewery`)
