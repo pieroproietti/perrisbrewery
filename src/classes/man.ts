@@ -91,7 +91,7 @@ export default class Man {
       /**
         * Creazione della versione markdown di man
         */
-      const tempMd = pbPackage.destDir + '/debian/' + pbPackage.name + '.md'
+      const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
       const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
       const view = {
         toc: toc,
@@ -111,8 +111,8 @@ export default class Man {
       let pbPackage = {} as IPackage
       pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
 
-      const destMd = pbPackage.destDir + '/debian/' + pbPackage.name + '.md'
-      const destMan = pbPackage.destDir + '/debian/' + pbPackage.name + '.1'
+      const destMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
+      const destMan = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.1'
 
       const vfile = require('to-vfile')
 
@@ -142,9 +142,7 @@ export default class Man {
       })
       // Compressione
       shx.exec('gzip ' + destMan)
-      // Nome definitivo del manuale
-      shx.exec('rm '  + destMan)
-      shx.exec('mv ' + destMan + 'gz' + pbPackage.destDir + '/debian/manpage.1.ex')
+      shx.exec('mv ' + destMan + '.gz ' + pbPackage.destDir + '/DEBIAN/manpage.1.ex')
     }
   }
 }

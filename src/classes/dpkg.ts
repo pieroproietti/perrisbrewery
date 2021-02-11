@@ -33,12 +33,12 @@ export default class Dpkg {
     }
     shx.exec('mkdir ./perrisbrewery/workdir')
     this.pbPackage.tempDir = `./perrisbrewery/workdir/${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
-    this.pbPackage.destDir = `./perrisbrewery/workdir/${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}`
     if (this.pbPackage.linuxArch === 'i386') {
       this.pbPackage.nodeVersion = 'v8.17.0'
     } else {
       this.pbPackage.nodeVersion = process.version
     }
+    this.pbPackage.destDir = `./perrisbrewery/workdir/${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
     return this.pbPackage
   }
 
@@ -55,27 +55,26 @@ export default class Dpkg {
     shx.exec(`dpkg-deb -R ${this.pbPackage.path}${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}.deb ${this.pbPackage.tempDir}`)
 
     // Creo directory destinazione
-    shx.exec(`mkdir ${this.pbPackage.destDir}`)
-    let cmd = `cp ${this.pbPackage.tempDir}/usr ${this.pbPackage.destDir} -R`
+    // shx.exec(`mkdir ${this.pbPackage.destDir}`)
+    const cmd = `cp -r ${this.pbPackage.tempDir} ${this.pbPackage.destDir}`
     console.log(cmd)
     shx.exec(cmd)
-    const curDir = process.cwd()
-    process.chdir(this.pbPackage.destDir)
-    cmd = `dh_make -sc lgpl2 -e piero.proietti@gmail.com --createorig -p ${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion} --yes`
-    console.log(cmd)
-    shx.exec(cmd)
-    
+    // const curDir = process.cwd()
+    // process.chdir(this.pbPackage.destDir)
+    // cmd = `dh_make -sc lgpl2 -e piero.proietti@gmail.com --createorig -p ${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion} --yes`
+    // console.log(cmd)
+    // shx.exec(cmd)
     // shx.exec('rm changelog')
     // shx.exec('rm compat')
     // shx.exec('rm control')
     // shx.exec('rm copyright')
-    shx.exec('rm debian/*.cron.d.ex')
-    shx.exec('rm debian/*.doc-base.EX')
-    shx.exec('rm debian/*.docs')
+    // shx.exec('rm debian/*.cron.d.ex')
+    // shx.exec('rm debian/*.doc-base.EX')
+    // shx.exec('rm debian/*.docs')
     // shx.exec('rm debian/manpage.1.ex')
-    shx.exec('rm debian/manpage.sgml.ex')
-    shx.exec('rm debian/manpage.xml.ex')
-    shx.exec('rm debian/menu.ex')
+    // shx.exec('rm debian/manpage.sgml.ex')
+    // shx.exec('rm debian/manpage.xml.ex')
+    // shx.exec('rm debian/menu.ex')
     // shx.exec('rm debian/postinst.ex')
     // shx.exec('rm debian/postrm.ex')
     // shx.exec('rm debian/preinst.ex')
@@ -84,8 +83,8 @@ export default class Dpkg {
     // shx.exec('rm debian/README.source')
     // shx.exec('rm debian/rules')
     // shx.exec('rm debian/source')
-
-    process.chdir(curDir)
+    // shx.exec('rm debian/watch.ex')
+    // process.chdir(curDir)
   }
 
   /**
@@ -93,7 +92,7 @@ export default class Dpkg {
    */
   makeScripts() {
     console.log(process.cwd())
-    shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/debian/*`)
+    shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/*`)
   }
 
   /**
@@ -112,7 +111,7 @@ export default class Dpkg {
       depends: 'Depends: isolinux, syslinux, squashfs-tools, xorriso, live-boot, live-boot-initramfs-tools, dpkg-dev, rsync, xterm, whois, dosfstools, parted',
       suggest: 'Suggest: calamares, qml-module-qtquick2, qml-module-qtquick-controls',
     }
-    fs.writeFileSync(`${this.pbPackage.destDir}/debian/control`, mustache.render(template, view))
+    fs.writeFileSync(`${this.pbPackage.destDir}/DEBIAN/control`, mustache.render(template, view))
   }
 
   /**
@@ -120,6 +119,7 @@ export default class Dpkg {
    */
   close(pbPackage: IPackage) {
     this.pbPackage = pbPackage
+
     shx.exec(`dpkg-deb --build ${this.pbPackage.destDir}`)
     // shx.exec(`rm ${this.pbPackage.tempDir} -rf`)
   }

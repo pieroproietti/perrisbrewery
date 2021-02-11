@@ -1,3 +1,4 @@
+Source: {{{name}}}
 Package: {{{name}}}
 Version: {{{version}}}
 Section: {{{section}}}

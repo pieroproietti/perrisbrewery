@@ -11,7 +11,7 @@ export default function convertHtml() {
     let pbPackage = {} as IPackage
     pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
 
-    const tempMd = pbPackage.destDir + '/debian/' + pbPackage.name + '.md'
+    const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
 
     const  vfile = require('to-vfile')
     const  report = require('vfile-reporter')
