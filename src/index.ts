@@ -42,15 +42,16 @@ class Perrisbrewery extends Command {
     if (args.pathSource !== undefined) {
       pathSource = args.pathSource
     }
-
-    console.log(here)
-    if (!fs.existsSync(`${here}/perrisbrewery`)) {
+    
+    if (!fs.existsSync(`${here}/perrisbrewery`)) {r s
       fs.mkdirSync(`${here}/perrisbrewery`)
       fs.mkdirSync(`${here}/perrisbrewery/workdir`)
       shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/template`), `${here}/perrisbrewery`)
       shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/scripts`), `${here}/perrisbrewery`)
-      console.log('perrisbrewery dir created!')
-      console.log('edit configuration and run pb again')
+      console.log('perrisbrewery dir created in: ' + pathSource)
+      console.log('Edit configuration in template e scripts. Include /perribrewery/workdir in .gitignore.')
+      console.log('After sudo npm run deb (build deb package with @oclif/cli-dev')
+      console.log('Finally run pb to rebuild your packages with manual, scripts, etc')
       process.exit(0)
     }
 
@@ -72,7 +73,6 @@ class Perrisbrewery extends Command {
       man.convertToMan()
       convertHtml()
       dpkg.close(pbPackage)
-
     })
   }
 }

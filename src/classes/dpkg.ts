@@ -31,7 +31,7 @@ export default class Dpkg {
     if (debPackage.includes('armel')) {
       this.pbPackage.linuxArch = 'armel'
     }
-    shx.exec('mkdir ./perrisbrewery/workdir')
+    // shx.exec('mkdir ./perrisbrewery/workdir')
     this.pbPackage.tempDir = `./perrisbrewery/workdir/${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
     if (this.pbPackage.linuxArch === 'i386') {
       this.pbPackage.nodeVersion = 'v8.17.0'
