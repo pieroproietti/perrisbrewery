@@ -3,7 +3,9 @@
 /* eslint-disable no-console */
 import {Command, flags} from '@oclif/command'
 import fs = require('fs')
+import path = require('path')
 import yaml = require('js-yaml')
+import shx = require('shelljs')
 
 import Utils from './classes/utils'
 import Dir from './classes/dir'
@@ -35,9 +37,15 @@ class Perrisbrewery extends Command {
 
     this.log()
 
-    let pathSource = './'
+    let pathSource = './here'
     if (args.pathSource !== undefined) {
       pathSource = args.pathSource
+    }
+
+    if (fs.existsSync('perrisbrewery')) {
+      fs.mkdirSync('perrisbrewery')
+      shx.cp('-r', path.resolve(__dirname, '../perrisbrewery/template'), 'perrisbrewery')
+      shx.cp('-r', path.resolve(__dirname, '../perrisbrewery/scripts'), 'perrisbrewery')
     }
 
     this.log('-pathSource: ' + pathSource)

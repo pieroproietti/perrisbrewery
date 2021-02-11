@@ -38,7 +38,7 @@ export default class Dpkg {
     } else {
       this.pbPackage.nodeVersion = process.version
     }
-    this.pbPackage.destDir = `./perrisbrewery/workdir/${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
+    this.pbPackage.destDir = this.pbPackage.tempDir // `./perrisbrewery/workdir/${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
     return this.pbPackage
   }
 
@@ -56,9 +56,9 @@ export default class Dpkg {
 
     // Creo directory destinazione
     // shx.exec(`mkdir ${this.pbPackage.destDir}`)
-    const cmd = `cp -r ${this.pbPackage.tempDir} ${this.pbPackage.destDir}`
-    console.log(cmd)
-    shx.exec(cmd)
+    // const cmd = `cp -r ${this.pbPackage.tempDir} ${this.pbPackage.destDir}`
+    // console.log(cmd)
+    // shx.exec(cmd)
     // const curDir = process.cwd()
     // process.chdir(this.pbPackage.destDir)
     // cmd = `dh_make -sc lgpl2 -e piero.proietti@gmail.com --createorig -p ${this.pbPackage.name}-${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion} --yes`
@@ -91,8 +91,8 @@ export default class Dpkg {
    * 
    */
   makeScripts() {
-    console.log(process.cwd())
-    shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/*`)
+
+    shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/`)
   }
 
   /**
@@ -121,6 +121,6 @@ export default class Dpkg {
     this.pbPackage = pbPackage
 
     shx.exec(`dpkg-deb --build ${this.pbPackage.destDir}`)
-    // shx.exec(`rm ${this.pbPackage.tempDir} -rf`)
+    // shx.exec(`rm ${this.pbPackage.tempDir} -rf`)>
   }
 }

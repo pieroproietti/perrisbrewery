@@ -142,7 +142,7 @@ export default class Man {
       })
       // Compressione
       shx.exec('gzip ' + destMan)
-      shx.exec('mv ' + destMan + '.gz ' + pbPackage.destDir + '/DEBIAN/manpage.1.ex')
+      shx.exec('mv ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/penguins-eggs/man/man1/eggs.1')
     }
   }
 }

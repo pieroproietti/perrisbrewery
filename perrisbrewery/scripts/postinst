@@ -25,10 +25,10 @@ case "$1" in
             cp /usr/lib/penguins-eggs/scripts/eggs.bash /etc/bash_completion.d/
         fi
         # aggiungo manuale
-        #if [ -d "/usr/local/man/man1" ]; then
-        #    cp /usr/lib/penguins-eggs/man/man1/eggs.1 /usr/local/man/man1
-        #    mandb > /dev/null
-        #fi
+        if [ -d "/usr/local/man/man1" ]; then
+            cp /usr/lib/penguins-eggs/man/man1/eggs.1 /usr/local/man/man1
+            mandb > /dev/null
+        fi
 
         echo "run sudo eggs prerequisites to configure" 
     ;;

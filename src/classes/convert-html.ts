@@ -5,13 +5,17 @@
 import fs = require('fs')
 import {IPackage} from '../interfaces'
 import yaml = require('js-yaml')
+import shx = require('shelljs')
 
 export default function convertHtml() {
   if (fs.existsSync('pb.yaml')) {
     let pbPackage = {} as IPackage
     pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
-
+    
     const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
+    const srcHtml = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.html'
+    const destHtml = pbPackage.destDir + '/usr/lib/penguins-eggs/man1' + pbPackage.name + '.md.html'
+
 
     const  vfile = require('to-vfile')
     const  report = require('vfile-reporter')
@@ -33,5 +37,8 @@ export default function convertHtml() {
       file.extname = '.html'
       vfile.writeSync(file)
     })
+
+    shx.exec('mv ' + srcHtml + ' ' + destHtml)
+
   }
 }
