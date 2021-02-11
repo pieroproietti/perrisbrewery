@@ -121,6 +121,6 @@ export default class Dpkg {
     this.pbPackage = pbPackage
 
     shx.exec(`dpkg-deb --build ${this.pbPackage.destDir}`)
-    // shx.exec(`rm ${this.pbPackage.tempDir} -rf`)>
+    shx.exec(`rm ${this.pbPackage.tempDir} -rf`)
   }
 }

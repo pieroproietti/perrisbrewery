@@ -49,7 +49,9 @@ class Perrisbrewery extends Command {
       fs.mkdirSync(`${here}/perrisbrewery/workdir`)
       shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/template`), `${here}/perrisbrewery`)
       shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/scripts`), `${here}/perrisbrewery`)
-      process.exit
+      console.log('perrisbrewery dir created!')
+      console.log('edit configuration and run pb again')
+      process.exit(0)
     }
 
     this.log('-pathSource: ' + pathSource)
