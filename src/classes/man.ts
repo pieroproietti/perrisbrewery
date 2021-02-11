@@ -89,7 +89,7 @@ export default class Man {
         * Creazione della versione markdown di man
         */
       const tempMd = pbPackage.tempDir + '/DEBIAN/' + pbPackage.name + '.md'
-      const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
+      const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'ascii')
       const view = {
         toc: toc,
         usage: usage,

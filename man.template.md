@@ -1,4 +1,4 @@
-eggs(1) -- A reproductive system for penguins
+﻿eggs(1) -- A reproductive system for penguins
 =============================================
 
 {{toc}}
