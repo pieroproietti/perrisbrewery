@@ -1,7 +1,7 @@
 /* eslint-disable no-negated-condition */
 /* eslint-disable no-process-exit */
 /* eslint-disable no-console */
-import {Command, flags} from '@oclif/command'
+import { Command, flags } from '@oclif/command'
 import fs = require('fs')
 import path = require('path')
 import yaml = require('js-yaml')
@@ -12,7 +12,7 @@ import Dir from './classes/dir'
 import Dpkg from './classes/dpkg'
 import Man from './classes/man'
 
-import {IPackage} from './interfaces'
+import { IPackage } from './interfaces'
 import convertHtml from './classes/convert-html'
 
 class Perrisbrewery extends Command {
@@ -20,15 +20,15 @@ class Perrisbrewery extends Command {
 
   static flags = {
     // add --version flag to show CLI version
-    version: flags.version({char: 'v'}),
-    help: flags.help({char: 'h'}),
-    force: flags.boolean({char: 'f'}),
+    version: flags.version({ char: 'v' }),
+    help: flags.help({ char: 'h' }),
+    force: flags.boolean({ char: 'f' }),
   }
 
-  static args = [{name: 'pathSource'}]
+  static args = [{ name: 'pathSource' }]
 
   async run() {
-    const {args} = this.parse(Perrisbrewery)
+    const { args } = this.parse(Perrisbrewery)
 
     const u = new Utils()
     u.titles(this.id + ' ' + this.argv)
@@ -37,15 +37,19 @@ class Perrisbrewery extends Command {
 
     this.log()
 
-    let pathSource = './here'
+    const here = process.cwd() + '/'
+    let pathSource = here
     if (args.pathSource !== undefined) {
       pathSource = args.pathSource
     }
 
-    if (fs.existsSync('perrisbrewery')) {
-      fs.mkdirSync('perrisbrewery')
-      shx.cp('-r', path.resolve(__dirname, '../perrisbrewery/template'), 'perrisbrewery')
-      shx.cp('-r', path.resolve(__dirname, '../perrisbrewery/scripts'), 'perrisbrewery')
+    console.log(here)
+    if (!fs.existsSync(`${here}/perrisbrewery`)) {
+      fs.mkdirSync(`${here}/perrisbrewery`)
+      fs.mkdirSync(`${here}/perrisbrewery/workdir`)
+      shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/template`), `${here}/perrisbrewery`)
+      shx.cp('-r', path.resolve(__dirname, `../perrisbrewery/scripts`), `${here}/perrisbrewery`)
+      process.exit
     }
 
     this.log('-pathSource: ' + pathSource)
@@ -66,7 +70,7 @@ class Perrisbrewery extends Command {
       man.convertToMan()
       convertHtml()
       dpkg.close(pbPackage)
-      
+
     })
   }
 }
