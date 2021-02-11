@@ -56,7 +56,8 @@
   },
   "files": [
     "/bin",
-    "/lib"
+    "/lib",
+    "/perrisbrewery"
   ],
   "homepage": "https://github.com/pieroproietti/perrisbrewery",
   "keywords": [
