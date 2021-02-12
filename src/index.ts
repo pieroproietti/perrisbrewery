@@ -22,13 +22,13 @@ class Perrisbrewery extends Command {
     // add --version flag to show CLI version
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
-    force: flags.boolean({ char: 'f' }),
+    mantain: flags.boolean({ char: 'm' }),
   }
 
   static args = [{ name: 'pathSource' }]
 
   async run() {
-    const { args } = this.parse(Perrisbrewery)
+    const { args, flags } = this.parse(Perrisbrewery)
 
     const u = new Utils()
     u.titles(this.id + ' ' + this.argv)
@@ -73,6 +73,9 @@ class Perrisbrewery extends Command {
       man.convertToMan()
       convertHtml()
       dpkg.close(pbPackage)
+      if (!flags.mantain) {
+        shx.exec(`rm ${pbPackage.tempDir} -rf`)
+      }
     })
   }
 }

@@ -14,7 +14,7 @@ export default function convertHtml() {
     
     const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
     const srcHtml = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.html'
-    const destHtml = pbPackage.destDir + '/usr/lib/penguins-eggs/man1' + pbPackage.name + '.md.html'
+    const destHtml = pbPackage.destDir + '/usr/lib/penguins-eggs/man/man1/' + pbPackage.name + '.1.html'
 
 
     const  vfile = require('to-vfile')
@@ -37,8 +37,7 @@ export default function convertHtml() {
       file.extname = '.html'
       vfile.writeSync(file)
     })
-
+    // shx.exec(`ls ${pbPackage.destDir}/DEBIAN`)
     shx.exec('mv ' + srcHtml + ' ' + destHtml)
-
   }
 }

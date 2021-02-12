@@ -141,7 +141,7 @@ export default class Man {
         vfile.writeSync(file)
       })
       // Compressione
-      shx.exec('gzip ' + destMan)
+      shx.exec('gzip -9 ' + destMan)
       shx.exec('mv ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/penguins-eggs/man/man1/eggs.1')
     }
   }
