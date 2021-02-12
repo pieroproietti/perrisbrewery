@@ -4,8 +4,8 @@ perri's brewery
 ## Changelog
 Versions are listed on reverse order, the first is the last one.
 
-### perrisbrewery-0.02
-* temptative to compile and run as package inside the project
+### perrisbrewery-0.05
+* it's working with penguins-eggs. I must to make it general
 
 ### perrisbrewery-0.0.1
 * first working version (only from sources)
