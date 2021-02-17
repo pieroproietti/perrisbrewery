@@ -108,9 +108,8 @@ export default class Dpkg {
       arch: this.pbPackage.linuxArch,
       mantainer: 'artisan <piero.proietti@gmail.com>',
       description: 'eggs Perri\'s Brewery edition. Remaster your system and distribuite it!',
-      depends: 'Depends: isolinux, syslinux, squashfs-tools, xorriso, live-boot, live-boot-initramfs-tools, dpkg-dev, rsync, xterm, whois, dosfstools, parted',
-      suggest: 'Suggest: calamares, qml-module-qtquick2, qml-module-qtquick-controls',
     }
+    // depends, suggest e conflicts vengono gestiti a mano
     fs.writeFileSync(`${this.pbPackage.destDir}/DEBIAN/control`, mustache.render(template, view))
   }
 
