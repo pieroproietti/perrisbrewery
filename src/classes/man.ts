@@ -148,9 +148,9 @@ export default class Man {
       shx.exec('cp ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/penguins-eggs/manpages/doc/man/')
       // copia nel sorgente per i pacchetti npm
       shx.exec('cp ' + destMan + '.gz ' + './manpages/doc/man/')
-      // copia in DEBIAN
-      shx.exec(`mkdir ${pbPackage.tempDir}/manpages/doc/man`)
-      shx.exec('cp ' + destMan + '.gz ' +  pbPackage.destDir + './manpages/doc/man/')
+      // copia in DEBIAN al momento non funziona
+      // shx.exec(`mkdir ${pbPackage.tempDir}/DEBIAN/manpages/doc/man -p`)
+      // shx.exec('cp ' + destMan + '.gz ' +  pbPackage.destDir + '/DEBIAN/manpages/doc/man')
     }
   }
 }

@@ -8,4 +8,4 @@ Maintainer: {{{mantainer}}}
 Description: {{{description}}}
 Depends: isolinux, syslinux, squashfs-tools, xorriso, live-boot, live-boot-initramfs-tools, dpkg-dev, rsync, xterm, whois, dosfstools, parted
 Suggest: calamares, qml-module-qtquick2, qml-module-qtquick-controls
-Conflics: calamares-settings-debian, calamares-settings-ubuntu
+Conflicts: calamares-settings-debian, calamares-settings-ubuntu
