@@ -29,6 +29,8 @@ export default class Man {
       let pbPackage = {} as IPackage
       pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
 
+
+
       const readme = fs.readFileSync(this.readmeName, 'utf-8').split('\n')
 
       let toc = ''
@@ -142,7 +144,13 @@ export default class Man {
       })
       // Compressione
       shx.exec('gzip -9 ' + destMan)
-      shx.exec('mv ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/penguins-eggs/man/man1/eggs.1')
+      // per il formato che uso adesso
+      shx.exec('cp ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/penguins-eggs/manpages/doc/man/')
+      // copia nel sorgente per i pacchetti npm
+      shx.exec('cp ' + destMan + '.gz ' + './manpages/doc/man/')
+      // copia in DEBIAN
+      shx.exec(`mkdir ${pbPackage.tempDir}/manpages/doc/man`)
+      shx.exec('cp ' + destMan + '.gz ' +  pbPackage.destDir + './manpages/doc/man/')
     }
   }
 }
