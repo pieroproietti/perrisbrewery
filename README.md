@@ -12,7 +12,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (-v|--version|version)
-perrisbrewery/0.0.7 linux-x64 node-v14.16.0
+perrisbrewery/0.0.8 linux-x64 node-v14.16.0
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
