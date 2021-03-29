@@ -104,7 +104,7 @@ export default class Man {
         usage: usage,
         commands: commands,
         sourceVersion: pbPackage.sourceVersion,
-        linuxVersion: pbPackage.linuxArch,
+        linuxVersion: linuxVersion,
         nodeVersion: pbPackage.nodeVersion,
       }
 
