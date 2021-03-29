@@ -1,6 +1,6 @@
 {
   "name": "perrisbrewery",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Piero Proietti",
   "bin": {
     "pb": "./bin/run"
