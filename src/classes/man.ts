@@ -29,8 +29,6 @@ export default class Man {
       let pbPackage = {} as IPackage
       pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf-8')) as IPackage
 
-
-
       const readme = fs.readFileSync(this.readmeName, 'utf-8').split('\n')
 
       let toc = ''
@@ -99,7 +97,7 @@ export default class Man {
         toc: toc,
         usage: usage,
         commands: commands,
-        version: pbPackage.version,
+        sourceVersion: pbPackage.sourceVersion,
         linuxVersion: pbPackage.linuxArch,
         nodeVersion: pbPackage.nodeVersion,
       }

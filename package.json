@@ -15,7 +15,7 @@
     "detect-character-encoding": "^0.8.0",
     "figlet": "^1.5.0",
     "js-yaml": "^4.0.0",
-    "mustache": "^4.1.0",
+    "mustache": "^4.2.0",
     "path": "^0.12.7",
     "pjson": "^1.0.9",
     "rehype": "^11.0.0",
@@ -37,19 +37,19 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
     "@types/clear": "^0.1.1",
-    "@types/figlet": "^1.2.1",
+    "@types/figlet": "^1.5.0",
     "@types/js-yaml": "^4.0.0",
     "@types/mustache": "^4.1.1",
-    "@types/node": "^14.14.31",
+    "@types/node": "^14.14.37",
     "@types/shelljs": "^0.8.8",
-    "eslint": "^7.20.0",
+    "eslint": "^7.23.0",
     "eslint-config-oclif": "^3.1.0",
     "eslint-config-oclif-typescript": "^0.2.0",
-    "globby": "^11.0.2",
+    "globby": "^11.0.3",
     "install": "^0.13.0",
-    "npm": "^7.5.6",
+    "npm": "^7.7.5",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.2"
+    "typescript": "^4.2.3"
   },
   "engines": {
     "node": ">=8.0.0"
