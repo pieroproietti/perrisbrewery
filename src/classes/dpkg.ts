@@ -24,12 +24,12 @@ export default class Dpkg {
     this.pbPackage.name = debPackage.substring(0, debPackage.indexOf('_'))
     this.pbPackage.sourceVersion = debPackage.substring(debPackage.indexOf('_') + 1, debPackage.indexOf('-'))
     this.pbPackage.buildVersion = debPackage.substring(debPackage.indexOf('-') + 1, debPackage.indexOf('-') + 2)
-    this.pbPackage.linuxArch = 'linux-32'
+    this.pbPackage.linuxArch = 'i386'
     if (debPackage.includes('amd64')) {
-      this.pbPackage.linuxArch = 'linux-64'
+      this.pbPackage.linuxArch = 'amd64'
     }
     if (debPackage.includes('armel')) {
-      this.pbPackage.linuxArch = 'linux-arm32'
+      this.pbPackage.linuxArch = 'armel'
     }
 
     // shx.exec('mkdir ./perrisbrewery/workdir')
