@@ -93,11 +93,11 @@ export default class Man {
         */
       const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
       const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
-      let linuxVersion = 'linux-32'
+      let linuxVersion = 'linux-x32'
       if (pbPackage.linuxArch==='amd64') {
-        linuxVersion = 'linux-32'
+        linuxVersion = 'linux-x64'
       } if (pbPackage.linuxArch==='armel') {
-        linuxVersion = 'linux-arm-32'
+        linuxVersion = 'linux-arm'
       }
       const view = {
         toc: toc,
