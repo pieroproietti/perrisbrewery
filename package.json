@@ -69,6 +69,7 @@
   },
   "repository": "pieroproietti/perrisbrewery",
   "scripts": {
+    "build": "tsc -p .",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
     "test": "echo NO TESTS",
