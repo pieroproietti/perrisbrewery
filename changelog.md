@@ -13,16 +13,12 @@ Versions are listed on reverse order, the first is the last one.
 ### perrisbrewery-0.0.1
 * first working version (only from sources)
 
-
-
 ## More informations
 
 You can find more informations at [Penguin's eggs blog](https://penguins-eggs.net).
 
 ## Contacts
-Feel free to contact [me](https://gitter.im/penguins-eggs-1/community?source=orgpage) or open an issue on [github](https://github.com/pieroproietti/penguins-eggs/issues).
-
-* mail: piero.proietti@gmail.com
+Feel free to contact [me](mailto://pieroproietti@gmail.com) or open an issue on [github](https://github.com/pieroproietti/penguins-eggs/issues).
 
 ## Copyright and licenses
 Copyright (c) 2017, 2020 [Piero Proietti](https://penguins-eggs.net/about-me.html), dual licensed under the MIT or GPL Version 2 licenses.

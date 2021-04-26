@@ -6,17 +6,8 @@
  * license: MIT
  */
 
-// import shx = require('shelljs')
-// import fs = require('fs')
-// import dns = require('dns')
-// import path = require('path')
-// import os = require('os')
 import pjson = require('pjson')
-// import inquirer = require('inquirer')
 import chalk = require('chalk')
-// import Pacman from './pacman'
-
-
 import clear = require('clear')
 import figlet = require('figlet')
 

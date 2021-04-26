@@ -1,6 +1,9 @@
-/* eslint-disable no-negated-condition */
-/* eslint-disable no-process-exit */
-/* eslint-disable no-console */
+/**
+ * Perri's Brevery
+ * 
+ * entrance
+ * 
+ */
 import { Command, flags } from '@oclif/command'
 import fs = require('fs')
 import path = require('path')
@@ -32,10 +35,9 @@ class Perrisbrewery extends Command {
 
         const u = new Utils()
         u.titles(this.id + ' ' + this.argv)
+        this.log()
 
         let pbPackage = {} as IPackage
-
-        this.log()
 
         const here = process.cwd() + '/'
         let pathSource = here
@@ -64,19 +66,20 @@ class Perrisbrewery extends Command {
         const dpkg = new Dpkg()
         const dir = new Dir()
         const filenames = dir.analyze(pathSource)
+        this.log('-filenames: ' + filenames)
 
         const man = new Man(pathSource + '/README.md')
         filenames.forEach((file: string) => {
             this.log('-file: ' + file)
             pbPackage = dpkg.analyze(pathSource + 'dist/deb/' + file)
             fs.writeFileSync('pb.yaml', yaml.dump(pbPackage), 'utf-8')
-            dpkg.disclose()
+            dpkg.unpack()
             dpkg.makeScripts()
             dpkg.makeControl()
             man.createMd()
             man.convertToMan()
             convertHtml()
-            dpkg.close(pbPackage)
+            dpkg.pack(pbPackage)
             if (!flags.mantain) {
                 shx.exec(`rm ${pbPackage.tempDir} -rf`)
             }

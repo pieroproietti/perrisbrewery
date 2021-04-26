@@ -16,7 +16,6 @@ export default function convertHtml() {
     const srcHtml = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.html'
     const destHtml = pbPackage.destDir + '/usr/lib/' + pbPackage.name + '/manpages/doc/man/' + pbPackage.name + '.1.html'
 
-
     const  vfile = require('to-vfile')
     const  report = require('vfile-reporter')
     const  unified = require('unified')
@@ -37,7 +36,6 @@ export default function convertHtml() {
       file.extname = '.html'
       vfile.writeSync(file)
     })
-    // shx.exec(`ls ${pbPackage.destDir}/DEBIAN`)
     shx.exec('mv ' + srcHtml + ' ' + destHtml)
   }
 }

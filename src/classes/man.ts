@@ -1,7 +1,3 @@
-/* eslint-disable node/no-extraneous-require */
-/* eslint-disable max-depth */
-/* eslint-disable complexity */
-/* eslint-disable no-console */
 /**
  * man
  */
@@ -13,10 +9,8 @@ import shx = require('shelljs')
 import {IPackage} from '../interfaces'
 
 /**
- *
- * @param removeTriploApice
+ * class Man
  */
-// eslint-disable-next-line complexity
 export default class Man {
   readmeName = ''
 
