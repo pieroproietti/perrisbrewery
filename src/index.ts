@@ -16,7 +16,7 @@ import { IPackage } from './interfaces'
 import convertHtml from './classes/convert-html'
 
 class Perrisbrewery extends Command {
-    static description = 'describe the command here'
+    static description = 'add scripts and manPages to packages .deb'
 
     static flags = {
         // add --version flag to show CLI version

@@ -131,9 +131,9 @@ export default class Man {
       const man = require('remark-man')
 
       const optMan = {
-        name: 'eggs',
+        name: pbPackage.name,
         section: '1',
-        description: 'eggs manpage',
+        description: pbPackage.name + ' manpage',
         version: pbPackage.version,
       }
 
@@ -149,7 +149,7 @@ export default class Man {
       // Compressione
       shx.exec('gzip -9 ' + destMan)
       // per il formato che uso adesso
-      shx.exec('cp ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/penguins-eggs/manpages/doc/man/')
+      shx.exec('cp ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/' + pbPackage.name + '/manpages/doc/man/')
       // copia nel sorgente per i pacchetti npm
       shx.exec('cp ' + destMan + '.gz ' + './manpages/doc/man/')
       // copia in DEBIAN al momento non funziona

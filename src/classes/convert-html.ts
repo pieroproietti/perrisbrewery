@@ -14,7 +14,7 @@ export default function convertHtml() {
     
     const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
     const srcHtml = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.html'
-    const destHtml = pbPackage.destDir + '/usr/lib/penguins-eggs/manpages/doc/man/' + pbPackage.name + '.1.html'
+    const destHtml = pbPackage.destDir + '/usr/lib/' + pbPackage.name + '/manpages/doc/man/' + pbPackage.name + '.1.html'
 
 
     const  vfile = require('to-vfile')
