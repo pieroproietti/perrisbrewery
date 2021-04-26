@@ -110,7 +110,6 @@ export default class Man {
     if (fs.existsSync('pb.yaml')) {
       let pbPackage = {} as IPackage
       pbPackage = yaml.load(fs.readFileSync('pb.yaml', 'utf8')) as IPackage
-
       const destMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
       const destMan = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.1'
 
@@ -142,13 +141,13 @@ export default class Man {
       })
       // Compressione
       shx.exec('gzip -9 ' + destMan)
-      // per il formato che uso adesso
+  
+      // patch per penguins-eggs
+      if (pbPackage.name === 'eggs'){
+        pbPackage.name = 'penguins-eggs'
+      }
       shx.exec('cp ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/' + pbPackage.name + '/manpages/doc/man/')
-      // copia nel sorgente per i pacchetti npm
       shx.exec('cp ' + destMan + '.gz ' + './manpages/doc/man/')
-      // copia in DEBIAN al momento non funziona
-      // shx.exec(`mkdir ${pbPackage.tempDir}/DEBIAN/manpages/doc/man -p`)
-      // shx.exec('cp ' + destMan + '.gz ' +  pbPackage.destDir + '/DEBIAN/manpages/doc/man')
     }
   }
 }
