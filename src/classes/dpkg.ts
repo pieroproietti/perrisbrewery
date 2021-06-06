@@ -96,7 +96,7 @@ export default class Dpkg {
     depends +=', bash-completion'
 
     // dipendenze BIOS standard
-    if (process.arch === 'x64' || process.arch === 'i386' ) {
+    if (this.pbPackage.linuxArch === 'amd64' || this.pbPackage.linuxArch === 'i386' ) {
       depends += ', syslinux'
       depends += ', isolinux'
     }
