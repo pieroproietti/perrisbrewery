@@ -6,7 +6,7 @@ import fs = require('fs')
 import mustache = require('mustache')
 import yaml = require('js-yaml')
 import shx = require('shelljs')
-import {IPackage} from '../interfaces'
+import { IPackage } from '../interfaces'
 
 /**
  * class Man
@@ -88,9 +88,13 @@ export default class Man {
       const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
       const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
       let linuxVersion = 'linux-x32'
-      if (pbPackage.linuxArch==='amd64') {
+      if (pbPackage.linuxArch === 'amd64') {
         linuxVersion = 'linux-x64'
-      } if (pbPackage.linuxArch==='armel') {
+      }
+      if (pbPackage.linuxArch === 'arm64') {
+        linuxVersion = 'linux-arm64'
+      }
+      if (pbPackage.linuxArch === 'armel') {
         linuxVersion = 'linux-arm'
       }
       const view = {
@@ -131,19 +135,19 @@ export default class Man {
       }
 
       unified()
-      .use(markdown)
-      .use(gfm)
-      .use(man, optMan)
-      .process(vfile.readSync(destMd), function (err: any, file: any) {
-        if (err) throw err
-        file.extname = '.1'
-        vfile.writeSync(file)
-      })
+        .use(markdown)
+        .use(gfm)
+        .use(man, optMan)
+        .process(vfile.readSync(destMd), function (err: any, file: any) {
+          if (err) throw err
+          file.extname = '.1'
+          vfile.writeSync(file)
+        })
       // Compressione
       shx.exec('gzip -9 ' + destMan)
-  
+
       // patch per penguins-eggs
-      if (pbPackage.name === 'eggs'){
+      if (pbPackage.name === 'eggs') {
         pbPackage.name = 'penguins-eggs'
       }
       shx.exec('cp ' + destMan + '.gz ' + pbPackage.destDir + '/usr/lib/' + pbPackage.name + '/manpages/doc/man/')

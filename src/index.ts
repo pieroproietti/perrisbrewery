@@ -67,6 +67,7 @@ class Perrisbrewery extends Command {
         const dir = new Dir()
         const filenames = dir.analyze(pathSource)
         this.log('-filenames: ' + filenames)
+        this.log('------------------------------------')
 
         const man = new Man(pathSource + '/README.md')
         filenames.forEach((file: string) => {

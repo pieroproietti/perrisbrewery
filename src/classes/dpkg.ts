@@ -8,7 +8,7 @@ import fs = require('fs')
 import shx = require('shelljs')
 import mustache = require('mustache')
 import path = require('path')
-import {IPackage} from '../interfaces'
+import { IPackage } from '../interfaces'
 
 /**
  * class Dpkg
@@ -22,7 +22,7 @@ export default class Dpkg {
    * @param debPackage
    * @return IPackage
    */
-  analyze(pathSource = '') :IPackage {
+  analyze(pathSource = ''): IPackage {
     this.pbPackage.path = path.dirname(pathSource) + '/'
     const debPackage = path.basename(pathSource)
 
@@ -31,19 +31,21 @@ export default class Dpkg {
     this.pbPackage.buildVersion = debPackage.substring(debPackage.indexOf('-') + 1, debPackage.indexOf('-') + 2)
 
     this.pbPackage.linuxArch = 'i386'
+
     if (debPackage.includes('amd64')) {
       this.pbPackage.linuxArch = 'amd64'
     }
+
+    if (debPackage.includes('arm64')) {
+      this.pbPackage.linuxArch = 'arm64'
+    }
+    
     if (debPackage.includes('armel')) {
       this.pbPackage.linuxArch = 'armel'
     }
 
     this.pbPackage.tempDir = `./perrisbrewery/workdir/${this.pbPackage.name}_${this.pbPackage.sourceVersion}-${this.pbPackage.buildVersion}_${this.pbPackage.linuxArch}`
-    if (this.pbPackage.linuxArch === 'i386') {
-      this.pbPackage.nodeVersion = 'v8.17.0'
-    } else {
-      this.pbPackage.nodeVersion = process.version
-    }
+    this.pbPackage.nodeVersion = process.version
     this.pbPackage.destDir = this.pbPackage.tempDir
     return this.pbPackage
   }
@@ -51,7 +53,7 @@ export default class Dpkg {
   /**
    *
    */
-   pack(pbPackage: IPackage) {
+  pack(pbPackage: IPackage) {
     this.pbPackage = pbPackage
 
     shx.exec(`dpkg-deb --build ${this.pbPackage.destDir}`)
@@ -60,7 +62,7 @@ export default class Dpkg {
   /**
    * Forse dovrebbe chiamarsi unpack
    */
-  unpack() :void {
+  unpack(): void {
     if (fs.existsSync(this.pbPackage.tempDir)) {
       shx.exec(`rm ${this.pbPackage.tempDir} -rf`)
     }
