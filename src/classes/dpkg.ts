@@ -9,6 +9,7 @@ import shx = require('shelljs')
 import mustache = require('mustache')
 import path = require('path')
 import { IPackage } from '../interfaces'
+import { dependencies } from 'pjson'
 
 /**
  * class Dpkg
@@ -81,6 +82,26 @@ export default class Dpkg {
    * makeControl
    */
   makeControl() {
+    let depends= 'squashfs-tools'
+    depends +=', xorriso'
+    depends +=', live-boot'
+    depends +=', live-boot-initramfs-tools'
+    depends +=', dpkg-dev'
+    depends +=', rsync'
+    depends +=', whois'
+    depends +=', dosfstools'
+    depends +=', parted'
+    depends +=',  whiptail'
+    depends +=', xdg-user-dirs'
+    depends +=', bash-completion'
+
+    // dipendenze BIOS standard
+    if (process.arch === 'x64' || process.arch === 'i386' ) {
+      depends += ', syslinux'
+      depends += ', isolinux'
+    }
+
+    // depends = 
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
     const view = {
       name: this.pbPackage.name,
@@ -89,7 +110,8 @@ export default class Dpkg {
       priority: 'standard',
       arch: this.pbPackage.linuxArch,
       mantainer: 'artisan <piero.proietti@gmail.com>',
-      description: 'camarones Perri\'s Brewery edition. Remaster your system and distribuite it!',
+      description: 'Perri\'s Brewery edition',
+      depends: depends,
     }
     // depends, suggest e conflicts vengono gestiti a mano
     fs.writeFileSync(`${this.pbPackage.destDir}/DEBIAN/control`, mustache.render(template, view))
