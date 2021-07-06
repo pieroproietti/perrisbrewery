@@ -1,0 +1,1 @@
+/home/artisan/penguins-eggs/src/interfaces/i-remix.ts

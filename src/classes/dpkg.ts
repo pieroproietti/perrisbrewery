@@ -79,6 +79,7 @@ export default class Dpkg {
     shx.exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/`)
   }
 
+ 
   /**
    * makeControl
    * We need to parify this version with pacman in penguins-eggs
@@ -107,6 +108,8 @@ export default class Dpkg {
     }
 
     // Aggiungo pacchetti per versione
+    const versionLike = Utils.versionLike()
+
     /* const versionLike = Pacman.versionLike()
     if ((versionLike === 'buster') || (versionLike === 'beowulf') || (versionLike === 'bullseye') || (versionLike === 'stretch') || (versionLike === 'jessie')) {
       depends += ', live-config'

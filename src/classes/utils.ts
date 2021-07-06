@@ -12,12 +12,20 @@ import clear = require('clear')
 import figlet = require('figlet')
 import shx = require ('shelljs')
 import cfonts = require('cfonts')
+import Distro from './distro'
+import { IRemix } from '../interfaces'
 
 /**
  * Utils: general porpourse utils
  * @remarks all the utilities
  */
 export default class Utils {
+   static versionLike(): string {
+      const remix = {} as IRemix
+      const distro = new Distro(remix)
+      return distro.versionLike
+   }
+      
    /**
  * machineArch
  * arm-efi, arm64-efi,
