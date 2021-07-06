@@ -33,8 +33,8 @@ class Perrisbrewery extends Command {
     async run() {
         const { args, flags } = this.parse(Perrisbrewery)
 
-        const u = new Utils()
-        u.titles(this.id + ' ' + this.argv)
+        // const u = new Utils()
+        Utils.titles(this.id + ' ' + this.argv)
         this.log()
 
         let pbPackage = {} as IPackage
