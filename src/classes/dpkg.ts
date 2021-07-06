@@ -122,12 +122,12 @@ export default class Dpkg {
     let config = ''
     if (init === 'systemd') {
       if (versionLike === 'bionic') {
-        // config = 'open-infrastructure-system-config'
+        config = ', open-infrastructure-system-config'
       } else {
-        config = 'live-config-systemd'
+        config = ', live-config-systemd'
       }
     } else {
-      config = 'live-config-sysvinit'
+      config = ', live-config-sysvinit'
     }
     depends += config
 
