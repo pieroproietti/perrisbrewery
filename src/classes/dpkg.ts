@@ -90,7 +90,7 @@ export default class Dpkg {
     depends += ', live-boot-initramfs-tools'
     depends += ', dpkg-dev'
     // depends +=', syslinux-common'
-    // depends +=', isolinux'
+    depends += ', isolinux'
     depends += ', net-tools'
     depends += ', rsync'
     depends += ', whois'
