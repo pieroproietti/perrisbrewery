@@ -107,10 +107,9 @@ export default class Dpkg {
       depends += ', syslinux-efi'
     }
 
-    // Aggiungo pacchetti per versione
+    // Aggiungo pacchetti per versione in eggs è su pacman
     const versionLike = Utils.versionLike()
 
-    /* const versionLike = Pacman.versionLike()
     if ((versionLike === 'buster') || (versionLike === 'beowulf') || (versionLike === 'bullseye') || (versionLike === 'stretch') || (versionLike === 'jessie')) {
       depends += ', live-config'
     } else if ((versionLike === 'focal')) {
@@ -118,6 +117,7 @@ export default class Dpkg {
     }
 
     // systemd / sysvinit
+    const verbose = false
     const init: string = shx.exec('ps --no-headers -o comm 1', { silent: !verbose }).trim()
     let config = ''
     if (init === 'systemd') {
@@ -130,7 +130,6 @@ export default class Dpkg {
       config = 'live-config-sysvinit'
     }
     depends += config
-    */
 
     // depends = 
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')

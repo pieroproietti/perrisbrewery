@@ -1,1 +1,1 @@
-/home/artisan/penguins-eggs/src/classes/distro.ts
+../../../../src/classes/distro.ts
