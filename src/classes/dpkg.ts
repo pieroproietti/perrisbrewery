@@ -10,6 +10,7 @@ import mustache = require('mustache')
 import path = require('path')
 import { IPackage } from '../interfaces'
 import { dependencies } from 'pjson'
+import Utils from './utils'
 
 /**
  * class Dpkg
@@ -40,7 +41,7 @@ export default class Dpkg {
     if (debPackage.includes('arm64')) {
       this.pbPackage.linuxArch = 'arm64'
     }
-    
+
     if (debPackage.includes('armel')) {
       this.pbPackage.linuxArch = 'armel'
     }
@@ -80,26 +81,53 @@ export default class Dpkg {
 
   /**
    * makeControl
+   * We need to parify this version with pacman in penguins-eggs
    */
   makeControl() {
-    let depends= 'squashfs-tools'
-    depends +=', xorriso'
-    depends +=', live-boot'
-    depends +=', live-boot-initramfs-tools'
-    depends +=', dpkg-dev'
-    depends +=', rsync'
-    depends +=', whois'
-    depends +=', dosfstools'
-    depends +=', parted'
-    depends +=',  whiptail'
-    depends +=', xdg-user-dirs'
-    depends +=', bash-completion'
+    let depends = 'squashfs-tools'
+    depends += ', xorriso'
+    depends += ', live-boot'
+    depends += ', live-boot-initramfs-tools'
+    depends += ', dpkg-dev'
+    // depends +=', syslinux-common'
+    // depends +=', isolinux'
+    depends += ', net-tools'
+    depends += ', rsync'
+    depends += ', whois'
+    depends += ', dosfstools'
+    depends += ', parted'
+    depends += ', whiptail'
+    depends += ', xdg-user-dirs'
+    depends += ', bash-completion'
 
-    // dipendenze BIOS standard
-    if (this.pbPackage.linuxArch === 'amd64' || this.pbPackage.linuxArch === 'i386' ) {
+    if (Utils.machineArch() === 'amd64' || Utils.machineArch() === 'i386') {
       depends += ', syslinux'
-      depends += ', isolinux'
+    } else if (Utils.machineArch() === 'armel' || Utils.machineArch() === 'arm64') {
+      depends += ', syslinux-efi'
     }
+
+    // Aggiungo pacchetti per versione
+    /* const versionLike = Pacman.versionLike()
+    if ((versionLike === 'buster') || (versionLike === 'beowulf') || (versionLike === 'bullseye') || (versionLike === 'stretch') || (versionLike === 'jessie')) {
+      depends += ', live-config'
+    } else if ((versionLike === 'focal')) {
+      depends += ', live-config'
+    }
+
+    // systemd / sysvinit
+    const init: string = shx.exec('ps --no-headers -o comm 1', { silent: !verbose }).trim()
+    let config = ''
+    if (init === 'systemd') {
+      if (versionLike === 'bionic') {
+        // config = 'open-infrastructure-system-config'
+      } else {
+        config = 'live-config-systemd'
+      }
+    } else {
+      config = 'live-config-sysvinit'
+    }
+    depends += config
+    */
 
     // depends = 
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
