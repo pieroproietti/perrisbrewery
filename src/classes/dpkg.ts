@@ -100,6 +100,7 @@ export default class Dpkg {
     depends += ', whiptail'
     depends += ', xdg-user-dirs'
     depends += ', bash-completion'
+    depends += ', cryptsetup'
 
     if (Utils.machineArch() === 'amd64' || Utils.machineArch() === 'i386') {
       depends += ', syslinux'
