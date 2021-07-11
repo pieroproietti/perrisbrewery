@@ -11,6 +11,7 @@ import path = require('path')
 import { IPackage } from '../interfaces'
 import { dependencies } from 'pjson'
 import Utils from './utils'
+import {array2spaced, depCommon, depArch} from '../lib/dependencies'
 
 /**
  * class Dpkg
@@ -85,54 +86,19 @@ export default class Dpkg {
    * We need to parify this version with pacman in penguins-eggs
    */
   makeControl() {
-    let depends = 'squashfs-tools'
-    depends += ', xorriso'
-    depends += ', live-boot'
-    depends += ', live-boot-initramfs-tools'
-    depends += ', dpkg-dev'
-    // depends +=', syslinux-common'
-    depends += ', isolinux'
-    depends += ', net-tools'
-    depends += ', rsync'
-    depends += ', whois'
-    depends += ', dosfstools'
-    depends += ', parted'
-    depends += ', whiptail'
-    depends += ', xdg-user-dirs'
-    depends += ', bash-completion'
-    depends += ', cryptsetup'
+    // Add dependencies common
+    let packages = depCommon
 
-    if (Utils.machineArch() === 'amd64' || Utils.machineArch() === 'i386') {
-      depends += ', syslinux'
-    } else if (Utils.machineArch() === 'armel' || Utils.machineArch() === 'arm64') {
-      depends += ', syslinux-efi'
-    }
+    // Add dependencies arch
+    const arch = Utils.machineArch()
+    depArch.forEach((dep) => {
+       if (dep.arch.includes(arch)) {
+          packages.push(dep.package)
+       }
+    })
 
-    // Aggiungo pacchetti per versione in eggs è su pacman
-    const versionLike = Utils.versionLike()
+    const depends = array2spaced(packages)
 
-    if ((versionLike === 'buster') || (versionLike === 'beowulf') || (versionLike === 'bullseye') || (versionLike === 'stretch') || (versionLike === 'jessie')) {
-      depends += ', live-config'
-    } else if ((versionLike === 'focal')) {
-      depends += ', live-config'
-    }
-
-    // systemd / sysvinit
-    const verbose = false
-    const init: string = shx.exec('ps --no-headers -o comm 1', { silent: !verbose }).trim()
-    let config = ''
-    if (init === 'systemd') {
-      if (versionLike === 'bionic') {
-        config = ', open-infrastructure-system-config'
-      } else {
-        config = ', live-config-systemd'
-      }
-    } else {
-      config = ', live-config-sysvinit'
-    }
-    depends += config
-
-    // depends = 
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
     const view = {
       name: this.pbPackage.name,
