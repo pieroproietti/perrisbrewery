@@ -11,7 +11,7 @@ import path = require('path')
 import { IPackage } from '../interfaces'
 import { dependencies } from 'pjson'
 import Utils from './utils'
-import {array2spaced, depCommon, depArch} from '../lib/dependencies'
+import {array2comma, depCommon, depArch} from '../lib/dependencies'
 
 /**
  * class Dpkg
@@ -97,7 +97,8 @@ export default class Dpkg {
        }
     })
 
-    const depends = array2spaced(packages)
+    packages.sort()
+    const depends = array2comma(packages)
 
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
     const view = {
