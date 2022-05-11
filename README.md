@@ -12,7 +12,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/0.5.3 linux-x64 node-v18.1.0
+perrisbrewery/0.5.4 linux-x64 node-v16.15.0
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -23,7 +23,6 @@ USAGE
 # Commands
 <!-- commands -->
 * [`pb autocomplete [SHELL]`](#pb-autocomplete-shell)
-* [`pb deb [PATHSOURCE]`](#pb-deb-pathsource)
 * [`pb help [COMMAND]`](#pb-help-command)
 * [`pb version`](#pb-version)
 
@@ -55,25 +54,6 @@ EXAMPLES
 ```
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.2.0/src/commands/autocomplete/index.ts)_
-
-## `pb deb [PATHSOURCE]`
-
-add preinst, postinst, prerm, postrm scripts and manPages to .deb
-
-```
-USAGE
-  $ pb deb [PATHSOURCE] [-v] [-h] [-m]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -m, --mantain
-  -v, --verbose  verbose
-
-DESCRIPTION
-  add preinst, postinst, prerm, postrm scripts and manPages to .deb
-```
-
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v0.5.3/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
