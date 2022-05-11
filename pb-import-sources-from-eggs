@@ -1,0 +1,4 @@
+cp ../penguins-eggs/src/lib/dependencies.ts src/lib/dependencies.ts
+cp ../penguins-eggs/src/lib/utils.ts src/lib/utils.ts
+cp ../penguins-eggs/src/interfaces/i-exec.ts src/interfaces/i-exec.ts
+

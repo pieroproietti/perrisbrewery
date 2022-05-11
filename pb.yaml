@@ -1,0 +1,7 @@
+path: ../penguins-eggs/dist/deb/
+name: eggs
+sourceVersion: 9.0.3.dbfbc121-1
+linuxArch: armel
+tempDir: ./perrisbrewery/workdir/eggs_9.0.3.dbfbc121-1_armel
+nodeVersion: v16.13.2
+destDir: ./perrisbrewery/workdir/eggs_9.0.3.dbfbc121-1_armel
