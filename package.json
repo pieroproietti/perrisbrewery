@@ -57,7 +57,8 @@
   ],
   "homepage": "https://github.com/pieroproietti/perrisbrewery",
   "keywords": [
-    "oclif"
+    "oclif",
+    "penguins-eggs"
   ],
   "license": "MIT",
   "main": "./lib/index.js",
