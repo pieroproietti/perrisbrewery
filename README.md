@@ -12,7 +12,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/0.6.1 linux-x64 node-v16.15.0
+perrisbrewery/0.6.3 linux-x64 node-v16.15.0
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -73,7 +73,7 @@ DESCRIPTION
   add preinst, postinst, prerm, postrm scripts and manPages to .deb
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v0.6.1/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v0.6.3/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
