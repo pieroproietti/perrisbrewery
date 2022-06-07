@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "insert preinst, postinst, prerm postrm scripts",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": "Piero Proietti",
   "bin": {
     "pb": "bin/run"
