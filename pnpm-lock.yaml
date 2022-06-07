@@ -23,7 +23,7 @@ specifiers:
   install: ^0.13.0
   js-yaml: ^4.1.0
   mustache: ^4.2.0
-  oclif: github:pieroproietti/penguins-oclif
+  penguins-oclif: ^3.0.1
   rehype-document: ^5.1.0
   rehype-format: ^3.1.0
   rehype-stringify: ^8.0.0
@@ -72,7 +72,7 @@ devDependencies:
   eslint-config-oclif-typescript: 1.0.2_t725usgvqspm5woeqpaxbfp2qu
   globby: 11.1.0
   install: 0.13.0
-  oclif: github.com/pieroproietti/penguins-oclif/1039b6320313f253afe03596c2712874c5d6401f
+  penguins-oclif: 3.0.1
   ts-node: 10.7.0_3smuweqyuzdazdnyhhezld6mfa
   typescript: 4.6.4
 
@@ -3853,6 +3853,35 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
+  /penguins-oclif/3.0.1:
+    resolution: {integrity: sha512-5Ph5dZUS7SFxQTzW5ZS1ohDtvR/8Wz0OBJouv+AV7zG4RGesAQ61FiIT3GkeKobPQts2Zb9Kyuz6+X+IKjoTPw==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      '@oclif/core': 1.8.1
+      '@oclif/plugin-help': 5.1.12
+      '@oclif/plugin-not-found': 2.3.1
+      '@oclif/plugin-warn-if-update-available': 2.0.4
+      aws-sdk: 2.1128.0
+      concurrently: 7.1.0
+      debug: 4.3.4
+      find-yarn-workspace-root: 2.0.0
+      fs-extra: 8.1.0
+      github-slugger: 1.4.0
+      lodash: 4.17.21
+      normalize-package-data: 3.0.3
+      qqjs: 0.3.11
+      semver: 7.3.7
+      tslib: 2.4.0
+      yeoman-environment: 3.9.1
+      yeoman-generator: 5.6.1_yeoman-environment@3.9.1
+      yosay: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
+      - encoding
+      - supports-color
+    dev: true
+
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
     dev: true
@@ -5134,34 +5163,3 @@ packages:
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: false
-
-  github.com/pieroproietti/penguins-oclif/1039b6320313f253afe03596c2712874c5d6401f:
-    resolution: {tarball: https://codeload.github.com/pieroproietti/penguins-oclif/tar.gz/1039b6320313f253afe03596c2712874c5d6401f}
-    name: penguins-oclif
-    version: 3.0.1
-    engines: {node: '>=12.0.0'}
-    hasBin: true
-    dependencies:
-      '@oclif/core': 1.8.1
-      '@oclif/plugin-help': 5.1.12
-      '@oclif/plugin-not-found': 2.3.1
-      '@oclif/plugin-warn-if-update-available': 2.0.4
-      aws-sdk: 2.1128.0
-      concurrently: 7.1.0
-      debug: 4.3.4
-      find-yarn-workspace-root: 2.0.0
-      fs-extra: 8.1.0
-      github-slugger: 1.4.0
-      lodash: 4.17.21
-      normalize-package-data: 3.0.3
-      qqjs: 0.3.11
-      semver: 7.3.7
-      tslib: 2.4.0
-      yeoman-environment: 3.9.1
-      yeoman-generator: 5.6.1_yeoman-environment@3.9.1
-      yosay: 2.0.2
-    transitivePeerDependencies:
-      - bluebird
-      - encoding
-      - supports-color
-    dev: true

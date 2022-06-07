@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "insert preinst, postinst, prerm postrm scripts",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "author": "Piero Proietti",
   "bin": {
     "pb": "bin/run"
@@ -42,7 +42,7 @@
     "eslint-config-oclif-typescript": "^1.0.2",
     "globby": "^11.0.1",
     "install": "^0.13.0",
-    "oclif": "github:pieroproietti/penguins-oclif",
+    "penguins-oclif": "^3.0.1",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
   },
