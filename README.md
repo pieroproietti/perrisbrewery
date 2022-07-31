@@ -12,7 +12,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/0.6.3 linux-x64 node-v16.15.0
+perrisbrewery/9.1.36a linux-x64 node-v16.16.0
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -73,7 +73,7 @@ DESCRIPTION
   add preinst, postinst, prerm, postrm scripts and manPages to .deb
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v0.6.3/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.1.36a/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
@@ -99,10 +99,21 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.1
 
 ```
 USAGE
-  $ pb version
+  $ pb version [--json] [--verbose]
+
+FLAGS
+  --verbose  Show additional information about the CLI.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+FLAG DESCRIPTIONS
+  --verbose  Show additional information about the CLI.
+
+    Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.0.4/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.1.1/src/commands/version.ts)_
 <!-- commandsstop -->
 
 # That's all Folks!
