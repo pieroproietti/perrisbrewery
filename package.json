@@ -8,7 +8,7 @@
   },
   "bugs": "https://github.com/pieroproietti/perrisbrewery/issues",
   "dependencies": {
-    "@oclif/core": "^1.13.0",
+    "@oclif/core": "^1",
 
     "@oclif/plugin-autocomplete": "^1.3.0",
     "@oclif/plugin-help": "^5.1.12",    
@@ -41,7 +41,7 @@
     "eslint": "^8.4.1",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.2",
-    "globby": "^11.0.1",
+    "globby": "^11",
     "install": "^0.13.0",
     "penguins-oclif": "../oclif/dest",
     "ts-node": "^10.7.0",
