@@ -12,7 +12,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/9.1.36a linux-x64 node-v16.16.0
+perrisbrewery/9.1.38 linux-x64 node-v16.16.0
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -54,7 +54,7 @@ EXAMPLES
   $ pb autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.0/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.2/src/commands/autocomplete/index.ts)_
 
 ## `pb deb [PATHSOURCE]`
 
@@ -73,7 +73,7 @@ DESCRIPTION
   add preinst, postinst, prerm, postrm scripts and manPages to .deb
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.1.36a/src/commands/deb.ts)_
+_See code: [lib/commands/deb.js](https://github.com/pieroproietti/perrisbrewery/blob/v9.1.38/lib/commands/deb.js)_
 
 ## `pb help [COMMAND]`
 
@@ -93,7 +93,7 @@ DESCRIPTION
   Display help for pb.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.15/src/commands/help.ts)_
 
 ## `pb version`
 
@@ -113,7 +113,7 @@ FLAG DESCRIPTIONS
     Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.1.1/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.1.3/src/commands/version.ts)_
 <!-- commandsstop -->
 
 # That's all Folks!
