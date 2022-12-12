@@ -12,7 +12,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/9.3.4 linux-x64 node-v16.18.0
+perrisbrewery/9.3.11 linux-x64 node-v16.18.1
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -54,7 +54,7 @@ EXAMPLES
   $ pb autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.3/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.7/src/commands/autocomplete/index.ts)_
 
 ## `pb deb [PATHSOURCE]`
 
@@ -73,7 +73,7 @@ DESCRIPTION
   add preinst, postinst, prerm, postrm scripts and manPages to .deb
 ```
 
-_See code: [lib/commands/deb.js](https://github.com/pieroproietti/perrisbrewery/blob/v9.3.4/lib/commands/deb.js)_
+_See code: [lib/commands/deb.js](https://github.com/pieroproietti/perrisbrewery/blob/v9.3.11/lib/commands/deb.js)_
 
 ## `pb help [COMMAND]`
 
@@ -93,7 +93,7 @@ DESCRIPTION
   Display help for pb.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.16/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
 
 ## `pb version`
 
