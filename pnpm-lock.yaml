@@ -22,7 +22,7 @@ specifiers:
   install: ^0.13.0
   js-yaml: ^4.1.0
   mustache: ^4.2.0
-  oclif-pnpm: ^3.4.2-3
+  oclif: 3.4.2-local
   rehype-document: ^5.1.0
   rehype-format: ^3.1.0
   rehype-stringify: ^8.0.0
@@ -71,7 +71,7 @@ devDependencies:
   eslint-config-oclif-typescript: 1.0.3_yfqovispp7u7jaktymfaqwl2py
   globby: 11.1.0
   install: 0.13.0
-  oclif-pnpm: 3.4.2-local
+  oclif: 3.4.2-local
   ts-node: 10.9.1_moeqx3xmzxqxagf2sz6mqkbb7m
 
 packages:
@@ -1368,7 +1368,7 @@ packages:
     resolution: {integrity: sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==}
     dependencies:
       base64-js: 1.5.1
-      ieee754: 1.1.13
+      ieee754: 1.2.1
       isarray: 1.0.0
     dev: true
 
@@ -3701,8 +3701,8 @@ packages:
     resolution: {integrity: sha512-EFVjAYfzWqWsBMRHPMAXLCDIJnpMhdWAqR7xG6M6a2cs6PMFpl/+Z20w9zDW4vkxOFfddegBKq9Rehd0bxWE7A==}
     engines: {node: '>= 10'}
 
-  /oclif-pnpm/3.4.2-local:
-    resolution: {integrity: sha512-JdawuvvOVo6SCzX3MWpFezRwcZbARkriX/+hIGW/s56bW+MeaOWZYpPwtE06KcEcPXX58mCoWS1UyJxd959QiQ==}
+  /oclif/3.4.2-local:
+    resolution: {integrity: sha512-8rj2ILMxrj7my+/qjSqPzWQ8ULO4EdYdgfSn4fxE4Ny1uAKpCFwq5lCjP6qu6AmmhWzGhW1h//2q5wnF1HhD2w==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     dependencies:
