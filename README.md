@@ -1,7 +1,7 @@
 
 # Perri's Brewery
 
-It parses the debian package created with [oclif](https://www.npmjs.com/package/oclif) and adds the pre and post installation/removal scripts to it and generates the man manual page.
+It parses the debian packages created with [oclif](https://www.npmjs.com/package/oclif) and adds the pre and post installation/removal scripts to it and generates the man manual page.
 
 # Usage
 <!-- usage -->

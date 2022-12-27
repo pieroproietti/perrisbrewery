@@ -50,8 +50,8 @@ export default class Deb extends Command {
             await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery/template`)} ${here}/perrisbrewery`, echo)
             await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery/scripts`)} ${here}/perrisbrewery`, echo)
             console.log('perrisbrewery dir created in: ' + pathSource)
-            console.log('Edit configuration in template e scripts. Include /perribrewery/workdir in .gitignore.')
-            console.log('After sudo npm run deb (build deb package with @oclif/cli-dev')
+            console.log('Edit configuration in template e scripts. Include /perribrewery/workdir in your .gitignore.')
+            console.log('After sudo npm run deb (build deb package with oclif')
             console.log('Finally run pb to rebuild your packages with manual, scripts, etc')
             process.exit(0)
         }
@@ -71,7 +71,6 @@ export default class Deb extends Command {
         const dir = new Dir()
         const packagesNames = await dir.analyze(pathSource, verbose)
         this.log('-packagesNames: ' + packagesNames)
-
 
         /**
          * inizio il lood fra  i pacchetti
