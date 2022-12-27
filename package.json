@@ -41,7 +41,8 @@
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.2",
     "globby": "^11.1",
-    "oclif-pnpm": "3.4.2-12",
+    "nps": "^5.10.0",
+    "oclif-pnpm": "^3.4.4-1",
     "ts-node": "^10.8.1"
   },
   "peerDependencies": {
@@ -86,6 +87,7 @@
   "repository": "pieroproietti/perrisbrewery",
   "scripts": {
     "build": "tsc -p .",
+    "lint": "nps lint",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif readme",
     "test": "echo NO TESTS",
