@@ -92,5 +92,9 @@
     "test": "echo NO TESTS",
     "version": "oclif readme && git add README.md"
   },
+  "publishConfig": {
+    "not_used_registry": "http://localhost:4873",
+    "registry": "https://registry.npmjs.org"
+  },
   "types": "lib/index.d.ts"
 }
