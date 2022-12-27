@@ -10,7 +10,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/9.3.13 linux-x64 node-v16.18.1
+perrisbrewery/9.3.13-1 linux-x64 node-v16.19.0
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -20,58 +20,7 @@ USAGE
 
 # Commands
 <!-- commands -->
-* [`pb autocomplete [SHELL]`](#pb-autocomplete-shell)
-* [`pb deb [PATHSOURCE]`](#pb-deb-pathsource)
 * [`pb help [COMMAND]`](#pb-help-command)
-* [`pb version`](#pb-version)
-
-## `pb autocomplete [SHELL]`
-
-display autocomplete installation instructions
-
-```
-USAGE
-  $ pb autocomplete [SHELL] [-r]
-
-ARGUMENTS
-  SHELL  shell type
-
-FLAGS
-  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
-
-DESCRIPTION
-  display autocomplete installation instructions
-
-EXAMPLES
-  $ pb autocomplete
-
-  $ pb autocomplete bash
-
-  $ pb autocomplete zsh
-
-  $ pb autocomplete --refresh-cache
-```
-
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.8/src/commands/autocomplete/index.ts)_
-
-## `pb deb [PATHSOURCE]`
-
-add preinst, postinst, prerm, postrm scripts and manPages to .deb
-
-```
-USAGE
-  $ pb deb [PATHSOURCE] [-v] [-h] [-m]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -m, --mantain
-  -v, --verbose  verbose
-
-DESCRIPTION
-  add preinst, postinst, prerm, postrm scripts and manPages to .deb
-```
-
-_See code: [lib/commands/deb.js](https://github.com/pieroproietti/perrisbrewery/blob/v9.3.13/lib/commands/deb.js)_
 
 ## `pb help [COMMAND]`
 
@@ -92,26 +41,6 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
-
-## `pb version`
-
-```
-USAGE
-  $ pb version [--json] [--verbose]
-
-FLAGS
-  --verbose  Show additional information about the CLI.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-FLAG DESCRIPTIONS
-  --verbose  Show additional information about the CLI.
-
-    Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
-```
-
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.1.3/src/commands/version.ts)_
 <!-- commandsstop -->
 
 # That's all Folks!
