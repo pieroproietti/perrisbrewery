@@ -1,7 +1,6 @@
 
 # Perri's Brewery
-
-It parses the debian packages created with [oclif](https://www.npmjs.com/package/oclif) and adds the pre and post installation/removal scripts to it and generates the man manual page.
+It parses the debian packages created with [oclif](https://www.npmjs.com/package/oclif) and adds the pre- and post-installation/removal scripts to them and generates the man manual page.
 
 # Usage
 <!-- usage -->
@@ -114,16 +113,15 @@ FLAG DESCRIPTIONS
 _See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.1.3/src/commands/version.ts)_
 <!-- commandsstop -->
 
-# That's all Folks!
-No need other configurations, penguins-eggs are battery included or better, as in the real, live is inside! :-D
+# More informations
+You can contact me by [mail](mailto://pieroproietti@gmail.com) or follow me on 
+[blog](https://penguins-eggs.net), 
+[facebook](https://www.facebook.com/groups/128861437762355/), 
+[github](https://github.com/pieroproietti/penguins-krill), 
+[jtsi](https://meet.jit.si/PenguinsEggsMeeting), 
+[reddit](https://www.reddit.com/user/Artisan61), 
+[telegram](https://t.me/penguins_eggs), 
+[twitter](https://twitter.com/pieroproietti).
 
-## More informations
-
-* blog: https://penguins-eggs.net
-* repo: https://github.com/pieroproietti/perrisbrewery
-* telegram: @penguins_eggs
-* mail: piero.proietti@gmail.com
-
-
-## Copyright and licenses
+# Copyright and licenses
 Copyright (c) 2017, 2023 [Piero Proietti](https://penguins-eggs.net/about-me.html), dual licensed under the MIT or GPL Version 2 licenses.
