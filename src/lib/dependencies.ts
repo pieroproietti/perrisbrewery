@@ -61,7 +61,6 @@ export const depCommon = [
   'sshfs', // eggs
   'syslinux-common', // eggs
   'xorriso', // eggs
-  'yq', // mom restored
 ]
 
 /**
