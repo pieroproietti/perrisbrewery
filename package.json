@@ -84,7 +84,8 @@
     "build": "tsc -p .",
     "lint": "nps lint",
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b && oclif readme",
+    "_prepack": "rm -rf lib && tsc -b && oclif readme",
+    "prepack": "rm -rf lib && tsc -b",
     "test": "echo NO TESTS",
     "version": "oclif readme && git add README.md"
   },
