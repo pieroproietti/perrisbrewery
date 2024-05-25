@@ -1,5 +1,5 @@
 
-import { Command, Flags } from "@oclif/core"
+import { Args, Command, Flags } from "@oclif/core"
 import fs, { utimes } from 'fs'
 import path from 'path'
 import yaml from 'js-yaml'
@@ -22,14 +22,15 @@ export default class Deb extends Command {
         mantain: Flags.boolean({ char: 'm' }),
     }
 
-    static args = [{ name: 'pathSource' }]
-
+    static args = {
+        pathSource: Args.string({name: 'pathSource', description: 'pathSource', required: false}),
+    }
+    
     async run(): Promise<void> {
         const { args, flags } = await this.parse(Deb)
 
         const verbose = flags.verbose
         const echo = Utils.setEcho(verbose)
-
 
         Utils.titles(this.id + ' ' + this.argv)
 
