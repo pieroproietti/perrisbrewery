@@ -1,28 +1,20 @@
 // https://github.com/oclif/oclif/blob/main/src/commands/pack/deb.ts
 import { Args, Command, Flags, Interfaces } from '@oclif/core'
-import fs, { utimes } from 'fs'
-import { exec as execSync } from 'node:child_process'
-import * as path from 'node:path'
-import { promisify } from 'node:util'
-import * as fsPromises from 'node:fs/promises'
-
-import Utils from '../classes/utils'
 import { array2comma, depCommon, depArch } from '../lib/dependencies'
 import { IPackage } from '../interfaces'
-import mustache from 'mustache'
+import {exec} from '../lib/utils'
+import * as fsPromises from 'node:fs/promises'
+import * as path from 'node:path'
 import Converter from '../classes/converter'
-
-//import * as Tarballs from '../classes/tarballs'
-//import {debArch, debVersion, templateShortKey} from '../../upload-util'
-//import {uniq} from '../../util'
-
-const exec = promisify(execSync)
+import fs, { utimes } from 'fs'
+import mustache from 'mustache'
+import Utils from '../classes/utils'
 
 /**
  * 
  */
 export default class Deb extends Command {
-  static description = 'Create a deb package from your CLI. This command is only available on Linux.'
+  static description = 'Create a deb package from your npm package'
 
   static args = {
     pathSource: Args.string({ name: 'pathSource', description: 'pathSource', required: false }),
@@ -49,6 +41,7 @@ export default class Deb extends Command {
 
     const verbose = flags.verbose
     const echo = Utils.setEcho(verbose)
+
     // Crea configurazione per il pacchetto
     const here = process.cwd() + '/'
     let pathSource = here
@@ -60,9 +53,6 @@ export default class Deb extends Command {
         pathSource = args.pathSource
       }
     }
-
-    await exec(`sudo rm -rf "${here}perrisbrewery/workdir/*"`)
-    await exec(`sudo rm -rf "${here}perrisbrewery/penguins-eggs*"`)
 
 
     if (!fs.existsSync(`${here}/perrisbrewery`)) {
@@ -78,6 +68,13 @@ export default class Deb extends Command {
       this.log('configurations already exists')
     }
 
+    if (!fs.existsSync(`${here}perrisbrewery/workdir/`)) {
+      await exec(`mkdir ${here}perrisbrewery/workdir/`)
+      await exec(`touch ${here}perrisbrewery/workdir/.gitkeep`)
+    } else {
+      await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
+    }
+
     const debArch = Utils.machineArch()
     const debVersion = Utils.getPackageVersion()
     const debPackageName = Utils.getPackageName()
@@ -88,7 +85,7 @@ export default class Deb extends Command {
       fsPromises.mkdir(path.join(workspace, 'usr', 'lib', Utils.getPackageName()), { recursive: true }),
       fsPromises.mkdir(path.join(workspace, 'usr', 'lib', Utils.getPackageName(), 'manpages', 'doc', 'man'), { recursive: true }),
     ])
-    this.log('creating debian structure complete')
+    this.log('creating package skel complete')
 
     let packages = depCommon
     const arch = Utils.machineArch()
@@ -121,10 +118,10 @@ export default class Deb extends Command {
     }
     // depends, suggest e conflicts vengono gestiti a mano
     fs.writeFileSync(`${this.pbPackage.destDir}/DEBIAN/control`, mustache.render(template, view))
-    this.log('creating debian control complete')
+    this.log('creating debian control file complete')
 
-    //await exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/`, echo)
-    this.log('Copy Debian scripts complete')
+    await exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/`, echo)
+    this.log('included debian scripts: postinst, postrm, preinst, prerm')
 
     // converti il readme e crea pagina man
     await exec(`cp ./README.md  ${this.pbPackage.destDir}/DEBIAN/`, echo)
@@ -160,5 +157,3 @@ export default class Deb extends Command {
     this.log(`finished building debian / ${arch}`)
   }
 }
-
-
