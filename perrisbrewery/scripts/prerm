@@ -1,9 +1,6 @@
 #!/bin/bash
-
-################################################
-# pre-remove script
-################################################
-
+# pre-remove for penguins-eggs-9.7.8
+#
 # pulizia dei link non rimovibili da apt
 rm /usr/lib/penguins-eggs/conf/distros -rf
 

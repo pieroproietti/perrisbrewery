@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for eggs-7.7.32
+# postrm script for penguins-eggs-9.7.8
 #
 # see: dh_installdeb(1)
 
@@ -43,9 +43,10 @@ case "$1" in
         # sanitize others
         rm -f /usr/bin/pve-live.sh
         rm -f /etc/systemd/system/pve-live.service
-
-        # remove yolk
-        #rm -rf /usr/local/yolk
+        # completions
+        rm -f /usr/lib/penguins-eggs/scripts/eggs.bash
+        rm -f /usr/share/zsh/functions/Completion/Zsh/_eggs
+        # yolk
         rm -rf /var/local/yolk
 
         # remove penguins-eggs multiarch (krill-modules)
