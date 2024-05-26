@@ -25,21 +25,24 @@ export default class Utils {
    * @returns arch
    */
    static machineArch(): string {
-      let arch = ''
-      if (process.arch === 'x64') {
-         arch = 'amd64'
-      } else if (process.arch === 'ia32') {
-         arch = 'i386'
-         // ma, se è installato node386 come in rasberry-desktop...
-         if (shx.exec('uname -m', { silent: true }).stdout.trim() === 'x86_64') {
-            arch = 'amd64'
-         }
-      } else if (process.arch === 'arm64') {
-         arch = 'arm64'
-      } else if (process.arch === 'arm') {
-         arch = 'armel'
-      }
-      return arch
+      let arch = process.arch
+      let debArch = ''
+      if (arch === 'x64') debArch='amd64'
+      if (arch === 'ia32') debArch='i386'
+      if (arch === 'arm') debArch='armel'
+      if (arch === 'arm64') debArch='arm64'
+      return debArch
+   }
+
+
+   static getPackageVersion(): string {
+      return "9.7.8-1"
+   }
+   static getPackageName(): string {
+      return "penguins-eggs"
+   }
+   static getPackageCmd(): string {
+      return "eggs"
    }
 
    /**
