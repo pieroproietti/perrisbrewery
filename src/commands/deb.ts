@@ -172,14 +172,18 @@ export default class Deb extends Command {
     await exec(`cp -r ${pathSource}/scripts  ${dest}`, echo)
     this.log('imported node package complete')
 
-    //await exec(`mkdir ${dest}/bin`, echo) // non serve
     await exec(`ln -s /usr/bin/node ${dest}/bin/node`)
     this.log('created link node')
 
-    // crea il binario
-    fs.writeFileSync(`${dest}/usr/bin/eggs`, scripts.bin(this.config))
+   
+    this.log(`creo eseguibile in ${dest}/bin/eggs`)
+    fs.writeFileSync(`${dest}/bin/eggs`, scripts.bin(this.config))
     await exec(`chmod 755 ${dest}/bin/eggs`)
-    //await exec(`ln -s /usr/bin/eggs ${dest}/usr/bin/eggs`)
+
+    this.log(`creo link in ${this.pbPackage.destDir}/usr/bin/eggs`)
+    await exec(`ln -sf ${dest}/bin/eggs ${this.pbPackage.destDir}/usr/bin/eggs`)
+
+  
     this.log('created bin file complete')
 
     const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
