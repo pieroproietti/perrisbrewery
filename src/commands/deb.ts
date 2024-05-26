@@ -10,6 +10,32 @@ import fs, { utimes } from 'fs'
 import mustache from 'mustache'
 import Utils from '../classes/utils'
 
+const scripts = {
+  /* eslint-disable no-useless-escape */
+  bin: (config: Interfaces.Config) => `#!/usr/bin/env bash
+set -e
+echoerr() { echo "$@" 1>&2; }
+get_script_dir () {
+  SOURCE="\${BASH_SOURCE[0]}"
+  # While \$SOURCE is a symlink, resolve it
+  while [ -h "\$SOURCE" ]; do
+    DIR="\$( cd -P "\$( dirname "\$SOURCE" )" && pwd )"
+    SOURCE="\$( readlink "\$SOURCE" )"
+    # If \$SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
+    [[ \$SOURCE != /* ]] && SOURCE="\$DIR/\$SOURCE"
+  done
+  DIR="\$( cd -P "\$( dirname "\$SOURCE" )" && pwd )"
+  echo "\$DIR"
+}
+DIR=\$(get_script_dir)
+export ${config.scopedEnvVarKey('UPDATE_INSTRUCTIONS')}="update with \\"sudo apt update && sudo apt install ${
+    config.bin
+  }\\""
+\$DIR/node \$DIR/run "\$@"
+`,
+}
+
+
 /**
  * 
  */
@@ -150,10 +176,19 @@ export default class Deb extends Command {
     await exec(`ln -s /usr/bin/node ${dest}/bin/node`)
     this.log('created link node')
 
+    // crea il binario
+    fs.writeFileSync(`${dest}/usr/bin/eggs`, scripts.bin(this.config))
+    await exec(`chmod 755 ${dest}/bin/eggs`)
+    //await exec(`ln -s /usr/bin/eggs ${dest}/usr/bin/eggs`)
+    this.log('created bin file complete')
+
     const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
     await exec(`sudo chown -R root "${workspace}"`)
     await exec(`sudo chgrp -R root "${workspace}"`)
     await exec(`${dpkgDeb} "${workspace}"`)
+
+
     this.log(`finished building debian / ${arch}`)
   }
 }
+
