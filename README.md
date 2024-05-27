@@ -13,7 +13,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/9.3.14 linux-x64 node-v16.19.0
+perrisbrewery/9.7.9 linux-x64 node-v20.5.1
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -30,20 +30,20 @@ USAGE
 
 ## `pb autocomplete [SHELL]`
 
-display autocomplete installation instructions
+Display autocomplete installation instructions.
 
 ```
 USAGE
   $ pb autocomplete [SHELL] [-r]
 
 ARGUMENTS
-  SHELL  shell type
+  SHELL  (zsh|bash|powershell) Shell type
 
 FLAGS
   -r, --refresh-cache  Refresh cache (ignores displaying instructions)
 
 DESCRIPTION
-  display autocomplete installation instructions
+  Display autocomplete installation instructions.
 
 EXAMPLES
   $ pb autocomplete
@@ -52,18 +52,23 @@ EXAMPLES
 
   $ pb autocomplete zsh
 
+  $ pb autocomplete powershell
+
   $ pb autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.8/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v3.0.18/src/commands/autocomplete/index.ts)_
 
 ## `pb deb [PATHSOURCE]`
 
-add preinst, postinst, prerm, postrm scripts and manPages to .deb
+Pack CLI into debian package.
 
 ```
 USAGE
   $ pb deb [PATHSOURCE] [-v] [-h] [-m]
+
+ARGUMENTS
+  PATHSOURCE  pathSource
 
 FLAGS
   -h, --help     Show CLI help.
@@ -71,10 +76,12 @@ FLAGS
   -v, --verbose  verbose
 
 DESCRIPTION
-  add preinst, postinst, prerm, postrm scripts and manPages to .deb
+  Pack CLI into debian package.
+
+  Create a deb package from your npm package
 ```
 
-_See code: [lib/commands/deb.js](https://github.com/pieroproietti/perrisbrewery/blob/v9.3.14/lib/commands/deb.js)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.7.9/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
@@ -82,10 +89,10 @@ Display help for pb.
 
 ```
 USAGE
-  $ pb help [COMMAND] [-n]
+  $ pb help [COMMAND...] [-n]
 
 ARGUMENTS
-  COMMAND  Command to show help for.
+  COMMAND...  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -94,7 +101,7 @@ DESCRIPTION
   Display help for pb.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.0.22/src/commands/help.ts)_
 
 ## `pb version`
 
@@ -114,7 +121,7 @@ FLAG DESCRIPTIONS
     Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.1.3/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.1.2/src/commands/version.ts)_
 <!-- commandsstop -->
 
 # More informations
