@@ -103,6 +103,7 @@ export default class Deb extends Command {
     const debArch = Utils.machineArch()
     const debVersion = packageJson.version + "-1"
     const debPackageName = packageJson.name
+    
     const workspace = path.join(here, 'perrisbrewery', 'workdir', debPackageName + "_" + debVersion + "_" + debArch)
 
     this.pbPackage.destDir = workspace
@@ -111,7 +112,7 @@ export default class Deb extends Command {
     this.pbPackage.name = debPackageName
     this.pbPackage.path = pathSource
     this.pbPackage.nodeVersion = process.version
-    console.log(this.pbPackage)
+    //console.log(this.pbPackage)
   
     if (fs.existsSync(`${here}perrisbrewery/workdir/`)) {
       await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)

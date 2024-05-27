@@ -120,6 +120,7 @@ export default class Converter {
       linuxVersion: linuxVersion,
       nodeVersion: nodeVersion
     }
+    const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
     fs.writeFileSync(tempMd, mustache.render(template, view), 'utf8')
 
   }
