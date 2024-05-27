@@ -1,6 +1,6 @@
 {
   "name": "perrisbrewery",
-  "description": "insert preinst, postinst, prerm postrm scripts",
+  "description": "insert manpages, preinst, postinst, prerm postrm scripts",
   "version": "9.5.9",
   "author": "Piero Proietti",
   "bin": {

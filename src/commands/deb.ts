@@ -152,9 +152,9 @@ export default class Deb extends Command {
     // converti il readme e crea pagina man
     await exec(`cp ./README.md  ${this.pbPackage.destDir}/DEBIAN/`, echo)
     const converter = new Converter(pathSource + '/README.md')
-    await converter.readme2md(verbose)
-    await converter.md2man(verbose)
-    await converter.md2html(verbose)
+    await converter.readme2md(this.pbPackage, verbose)
+    await converter.md2man(this.pbPackage, verbose)
+    await converter.md2html(this.pbPackage, verbose)
     this.log('created man page complete')
 
     // copia il binario
@@ -176,21 +176,21 @@ export default class Deb extends Command {
     this.log('created link node')
 
    
-    this.log(`creo eseguibile in ${dest}/bin/eggs`)
     fs.writeFileSync(`${dest}/bin/eggs`, scripts.bin(this.config))
     await exec(`chmod 755 ${dest}/bin/eggs`)
+    this.log(`created exec ${dest}/bin/eggs`)
 
-    this.log(`creo link in ${this.pbPackage.destDir}/usr/bin/eggs`)
-    await exec(`ln -sf ${dest}/bin/eggs ${this.pbPackage.destDir}/usr/bin/eggs`)
-
-  
-    this.log('created bin file complete')
+    let curDir=process.cwd()
+    process.chdir(`${this.pbPackage.destDir}/usr/bin`)
+    await exec(`ln -s ../lib/penguins-eggs/bin/eggs eggs`)
+    process.chdir(curDir)
+    this.log('created /usr/bin/eggs file complete')
+    this.log(`created a link for /usr/bin`)
 
     const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
     await exec(`sudo chown -R root "${workspace}"`)
     await exec(`sudo chgrp -R root "${workspace}"`)
     await exec(`${dpkgDeb} "${workspace}"`)
-
 
     this.log(`finished building debian / ${arch}`)
   }
