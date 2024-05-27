@@ -66,19 +66,3 @@ export async function exec(command: string, {echo = false, ignore = false, captu
     // end promise
   })
 }
-
-/**
-  * Il problema è in questa funzione: core/cli-ux/indesx.ts
-  * qui riportata solo come esempio
-  *
-function timeout(p: Promise<any>, ms: number) {
-  function wait(ms: number, unref = false) {
-    return new Promise(resolve => {
-      const t: any = setTimeout(() => resolve(null), ms)
-      if (unref) t.unref()
-    })
-  }
-
-  return Promise.race([p, wait(ms, true).then(() => ux.error('timed out'))])
-}
-*/

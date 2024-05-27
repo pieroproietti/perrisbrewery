@@ -1,15 +1,13 @@
 #!/bin/bash
-
-################################################
-# pre-remove script
-################################################
+# prerm for penguins-eggs-9.7.8
+#
 
 # pulizia dei link non rimovibili da apt
-rm /usr/lib/penguins-eggs/conf/distros -rf
+rm -rf /usr/lib/penguins-eggs/conf/distros 
 
 # Rimuoviamo il manuale di eggs
 if [ -f "/usr/share/man/man1/eggs.1.gz" ]; then
-    rm /usr/share/man/man1/eggs.1.gz
+    rm -f /usr/share/man/man1/eggs.1.gz
 fi
 
 # Rimuoviamo eggs.bash per l'autocomplete
@@ -17,29 +15,28 @@ if [ -f "/etc/bash_completion.d/eggs.bash" ]; then
     rm -f /etc/bash_completion.d/eggs.bash
 fi
 
-    FILE=/var/lib/dpkg/info/calamares.list
-    # i386-linux-gnu/ o x86_64-linux-gnu
-    #if [ -f "$FILE" ]; then
-        rm -rf /etc/calamares
+FILE=/var/lib/dpkg/info/calamares.list
+if [ -f "$FILE" ]; then
+    rm -rf /etc/calamares
 
-        # remove scripts calamares/krill
-        rm -f /usr/sbin/bootloader-config.sh
-        rm -f /usr/sbin/remove-link.sh
-        rm -f /usr/sbin/sources-yolk.sh
+    # remove scripts calamares/krill
+    rm -f /usr/sbin/bootloader-config.sh
+    rm -f /usr/sbin/remove-link.sh
+    rm -f /usr/sbin/sources-yolk.sh
 
-        # remove eggs calamares-modules x86_64
-        rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/bootloader-config  
-        rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/remove-link  
-        rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/sources-yolk  
-        rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/sources-yolk-unmount
+    # remove eggs calamares-modules x86_64
+    rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/bootloader-config  
+    rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/remove-link  
+    rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/sources-yolk  
+    rm -rf /usr/lib/x86_64-linux-gnu/calamares/modules/sources-yolk-unmount
 
-        # remove eggs calamares-modules i386
-        rm -rf /usr/lib/i386-linux-gnu/calamares/modules/bootloader-config  
-        rm -rf /usr/lib/i386-linux-gnu/calamares/modules/remove-link  
-        rm -rf /usr/lib/i386-linux-gnu/calamares/modules/sources-yolk  
-        rm -rf /usr/lib/i386-linux-gnu/calamares/modules/sources-yolk-unmount
+    # remove eggs calamares-modules i386
+    rm -rf /usr/lib/i386-linux-gnu/calamares/modules/bootloader-config  
+    rm -rf /usr/lib/i386-linux-gnu/calamares/modules/remove-link  
+    rm -rf /usr/lib/i386-linux-gnu/calamares/modules/sources-yolk  
+    rm -rf /usr/lib/i386-linux-gnu/calamares/modules/sources-yolk-unmount
 
-        # no calamares in armel and arm64
-    #fi
+    # no calamares in armel and arm64
+fi
 
 exit 0
