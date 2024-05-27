@@ -1,6 +1,10 @@
 
 # Perri's Brewery
+## version 9.5.9
 It parses the debian packages created with [oclif](https://www.npmjs.com/package/oclif) and adds the pre- and post-installation/removal scripts to them and generates the man manual page.
+
+## version 9.7.8
+Compatible with oclif 4.x, build debian packages from dist, create manpage from README.md and include prerm, postrm, preinst and postinst scripts for Debian package.
 
 # Usage
 <!-- usage -->
