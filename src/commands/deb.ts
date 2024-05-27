@@ -2,13 +2,14 @@
 import { Args, Command, Flags, Interfaces } from '@oclif/core'
 import { array2comma, depCommon, depArch } from '../lib/dependencies'
 import { IPackage } from '../interfaces'
-import {exec} from '../lib/utils'
+import { exec } from '../lib/utils'
 import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
 import Converter from '../classes/converter'
 import fs, { utimes } from 'fs'
 import mustache from 'mustache'
 import Utils from '../classes/utils'
+import yaml from 'js-yaml'
 
 const scripts = {
   /* eslint-disable no-useless-escape */
@@ -28,9 +29,8 @@ get_script_dir () {
   echo "\$DIR"
 }
 DIR=\$(get_script_dir)
-export ${config.scopedEnvVarKey('UPDATE_INSTRUCTIONS')}="update with \\"sudo apt update && sudo apt install ${
-    config.bin
-  }\\""
+export ${config.scopedEnvVarKey('UPDATE_INSTRUCTIONS')}="update with \\"sudo apt update && sudo apt install ${config.bin
+    }\\""
 \$DIR/node \$DIR/run "\$@"
 `,
 }
@@ -80,11 +80,10 @@ export default class Deb extends Command {
       }
     }
 
-
     if (!fs.existsSync(`${here}/perrisbrewery`)) {
       fs.mkdirSync(`${here}/perrisbrewery`)
-      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery/template`)} ${here}/perrisbrewery`, echo)
-      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery/scripts`)} ${here}/perrisbrewery`, echo)
+      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/template`)} ${here}/perrisbrewery`, echo)
+      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/scripts`)} ${here}/perrisbrewery`, echo)
       this.log('perrisbrewery dir created in: ' + pathSource)
       this.log('Edit configuration in template e scripts. Include /perribrewery/workdir in your .gitignore.')
       this.log('After sudo npm run deb (build deb package with oclif')
@@ -94,32 +93,17 @@ export default class Deb extends Command {
       this.log('configurations already exists')
     }
 
-    if (!fs.existsSync(`${here}perrisbrewery/workdir/`)) {
-      await exec(`mkdir ${here}perrisbrewery/workdir/`)
-      await exec(`touch ${here}perrisbrewery/workdir/.gitkeep`)
-    } else {
-      await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
+    if (! fs.existsSync(pathSource + 'package.json')) {
+      console.log('package.json not found in ' + pathSource)
+      process.exit(0)
     }
 
+    let content = fs.readFileSync(pathSource + 'package.json', 'utf8')
+    let packageJson = JSON.parse(content)
     const debArch = Utils.machineArch()
-    const debVersion = Utils.getPackageVersion()
-    const debPackageName = Utils.getPackageName()
+    const debVersion = packageJson.version + "-1"
+    const debPackageName = packageJson.name
     const workspace = path.join(here, 'perrisbrewery', 'workdir', debPackageName + "_" + debVersion + "_" + debArch)
-    await Promise.all([
-      fsPromises.mkdir(path.join(workspace, 'DEBIAN'), { recursive: true }),
-      fsPromises.mkdir(path.join(workspace, 'usr', 'bin'), { recursive: true }),
-      fsPromises.mkdir(path.join(workspace, 'usr', 'lib', Utils.getPackageName()), { recursive: true }),
-      fsPromises.mkdir(path.join(workspace, 'usr', 'lib', Utils.getPackageName(), 'manpages', 'doc', 'man'), { recursive: true }),
-    ])
-    this.log('creating package skel complete')
-
-    let packages = depCommon
-    const arch = Utils.machineArch()
-    depArch.forEach((dep) => {
-      if (dep.arch.includes(arch)) {
-        packages.push(dep.package)
-      }
-    })
 
     this.pbPackage.destDir = workspace
     this.pbPackage.linuxArch = debArch
@@ -128,8 +112,31 @@ export default class Deb extends Command {
     this.pbPackage.path = pathSource
     this.pbPackage.tempDir = path.join(here, 'perrisbrewery', 'workdir', 'temp')
     this.pbPackage.nodeVersion = process.version
+    console.log(this.pbPackage)
+  
+    if (fs.existsSync(`${here}perrisbrewery/workdir/`)) {
+      await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
+    }
 
+    await Promise.all([
+      fsPromises.mkdir(path.join(workspace, 'DEBIAN'), { recursive: true }),
+      fsPromises.mkdir(path.join(workspace, 'usr', 'bin'), { recursive: true }),
+      fsPromises.mkdir(path.join(workspace, 'usr', 'lib', Utils.getPackageName()), { recursive: true }),
+      fsPromises.mkdir(path.join(workspace, 'usr', 'lib', Utils.getPackageName(), 'manpages', 'doc', 'man'), { recursive: true }),
+    ])
+    this.log('creating package skel complete')
+
+    // create package dependencies
+    let packages = depCommon
+    const arch = Utils.machineArch()
+    depArch.forEach((dep) => {
+      if (dep.arch.includes(arch)) {
+        packages.push(dep.package)
+      }
+    })
     packages.sort()
+
+
     const depends = array2comma(packages)
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
     const view = {
@@ -158,7 +165,7 @@ export default class Deb extends Command {
     this.log('created man page complete')
 
     // copia il binario
-    let dest=this.pbPackage.destDir + "/usr/lib/penguins-eggs"
+    let dest = this.pbPackage.destDir + "/usr/lib/penguins-eggs"
     await exec(`cp -r ${pathSource}/assets ${dest}`, echo)
     await exec(`cp -r ${pathSource}/bin ${dest}`, echo)
     await exec(`cp -r ${pathSource}/conf ${dest}`, echo)
@@ -175,12 +182,12 @@ export default class Deb extends Command {
     await exec(`ln -s /usr/bin/node ${dest}/bin/node`)
     this.log('created link node')
 
-   
+
     fs.writeFileSync(`${dest}/bin/eggs`, scripts.bin(this.config))
     await exec(`chmod 755 ${dest}/bin/eggs`)
     this.log(`created exec ${dest}/bin/eggs`)
 
-    let curDir=process.cwd()
+    let curDir = process.cwd()
     process.chdir(`${this.pbPackage.destDir}/usr/bin`)
     await exec(`ln -s ../lib/penguins-eggs/bin/eggs eggs`)
     process.chdir(curDir)
