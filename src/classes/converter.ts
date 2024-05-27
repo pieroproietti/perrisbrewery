@@ -99,7 +99,6 @@ export default class Converter {
     /**
     * Creazione della versione markdown
     */
-    const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
     const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
 
     const sourceVersion = pbPackage.sourceVersion

@@ -110,7 +110,6 @@ export default class Deb extends Command {
     this.pbPackage.sourceVersion = debVersion
     this.pbPackage.name = debPackageName
     this.pbPackage.path = pathSource
-    this.pbPackage.tempDir = path.join(here, 'perrisbrewery', 'workdir', 'temp')
     this.pbPackage.nodeVersion = process.version
     console.log(this.pbPackage)
   
@@ -135,9 +134,9 @@ export default class Deb extends Command {
       }
     })
     packages.sort()
-
-
     const depends = array2comma(packages)
+
+    // create debian control file
     const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
     const view = {
       name: this.pbPackage.name,
@@ -149,14 +148,14 @@ export default class Deb extends Command {
       description: 'Perri\'s Brewery edition',
       depends: depends,
     }
-    // depends, suggest e conflicts vengono gestiti a mano
     fs.writeFileSync(`${this.pbPackage.destDir}/DEBIAN/control`, mustache.render(template, view))
     this.log('creating debian control file complete')
 
+    // include debian scripts
     await exec(`cp ./perrisbrewery/scripts/* ${this.pbPackage.destDir}/DEBIAN/`, echo)
     this.log('included debian scripts: postinst, postrm, preinst, prerm')
 
-    // converti il readme e crea pagina man
+    // create man page
     await exec(`cp ./README.md  ${this.pbPackage.destDir}/DEBIAN/`, echo)
     const converter = new Converter(pathSource + '/README.md')
     await converter.readme2md(this.pbPackage, verbose)
