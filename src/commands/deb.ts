@@ -167,6 +167,7 @@ export default class Deb extends Command {
     // copia il binario
     let dest = this.pbPackage.destDir + "/usr/lib/penguins-eggs"
     await exec(`cp -r ${pathSource}/assets ${dest}`, echo)
+    await exec(`cp -r ${pathSource}/addons ${dest}`, echo)
     await exec(`cp -r ${pathSource}/bin ${dest}`, echo)
     await exec(`cp -r ${pathSource}/conf ${dest}`, echo)
     await exec(`cp -r ${pathSource}/dist ${dest}`, echo)
