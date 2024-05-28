@@ -13,7 +13,7 @@ $ npm install -g perrisbrewery
 $ pb COMMAND
 running command...
 $ pb (--version|-v)
-perrisbrewery/9.7.9 linux-x64 node-v20.5.1
+perrisbrewery/9.7.11 linux-x64 node-v20.5.1
 $ pb --help [COMMAND]
 USAGE
   $ pb COMMAND
@@ -81,7 +81,7 @@ DESCRIPTION
   Create a deb package from your npm package
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.7.9/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.7.11/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
