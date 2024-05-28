@@ -82,8 +82,7 @@ export default class Deb extends Command {
       await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/`)} ${here}/perrisbrewery`, echo)
       this.log('perrisbrewery dir created in: ' + pathSource)
       this.log('Edit configuration in template e scripts. Include /perribrewery/workdir in your .gitignore.')
-      this.log('After sudo npm run deb (build deb package with oclif')
-      this.log('Finally run pb to rebuild your packages with manual, scripts, etc')
+      this.log('Finally run pb to rebuild your packages with manpages, scripts, etc')
       process.exit(0)
     } else {
       this.log('perrisbrewery configurations already exists')
@@ -161,11 +160,11 @@ export default class Deb extends Command {
         depends: depends,
       }
       fs.writeFileSync(`${destDir}/DEBIAN/control`, mustache.render(template, view))
-      this.log('>>>creating debian control file complete')
+      this.log('>>> creating debian control file complete')
 
       // include debian scripts
       await exec(`cp ./perrisbrewery/scripts/* ${destDir}/DEBIAN/`, echo)
-      this.log('>>>included debian scripts: postinst, postrm, preinst, prerm')
+      this.log('>>> included debian scripts: postinst, postrm, preinst, prerm')
 
       // create man page
       await exec(`cp ./README.md  ${destDir}/DEBIAN/`, echo)
@@ -173,9 +172,9 @@ export default class Deb extends Command {
       await converter.readme2md(destDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
       await converter.md2man(destDir, packageName, packageVersion, binName, verbose)
       await converter.md2html(destDir, packageName, packageVersion, binName,  verbose)
-      this.log('>>>created man page complete')
+      this.log('>>> created man page complete')
 
-      this.log('>>>renews manpages on the source')
+      this.log('>>> renews manpages on the source')
       await exec(`rm -rf ${here}/manpages`, echo)
       await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
 
@@ -200,22 +199,22 @@ export default class Deb extends Command {
       for (const file in files) {
         await exec(`cp -r ${pathSource}/${files[file]} ${rootLib}`, echo)
       }
-      this.log('>>>imported node package complete')
+      this.log('>>> imported node package complete')
 
       // create link to node on rootLib
       await exec(`ln -s /usr/bin/node ${rootLib}/bin/node`)
-      this.log('created link node')
+      this.log('>>> created link node')
 
       // create binName
       fs.writeFileSync(`${rootLib}/bin/${binName}`, scripts.bin(this.config))
       await exec(`chmod 755 ${rootLib}/bin/${binName}`)
-      this.log(`>>>created exec ${binName}`)
+      this.log(`>>> created exec ${binName}`)
 
       let curDir = process.cwd()
       process.chdir(`${destDir}/usr/bin`)
       await exec(`ln -s ../lib/${packageName}/bin/${binName} ${binName}`)
       process.chdir(curDir)
-      this.log(`>>>created a link on /usr/bin/ for ${binName}`)
+      this.log(`>>> created a link on /usr/bin/ for ${binName}`)
 
       const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
       await exec(`sudo chown -R root "${destDir}"`)
