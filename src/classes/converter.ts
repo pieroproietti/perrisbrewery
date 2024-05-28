@@ -29,7 +29,7 @@ export default class Converter {
   /**
    * readme2md
    */
-  async readme2md(pbPackage: IPackage, verbose = false) {
+  async readme2md(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
 
     if (verbose) {
       console.log('Converter.readme2md()')
@@ -101,47 +101,35 @@ export default class Converter {
     */
     const template = fs.readFileSync('perrisbrewery/template/man.template.md', 'utf8')
 
-    const sourceVersion = pbPackage.sourceVersion
-    let linuxVersion = 'linux-x32'
-    if (pbPackage.linuxArch === 'amd64') {
-      linuxVersion = 'linux-x64'
-    } else if (pbPackage.linuxArch === 'arm64') {
-      linuxVersion = 'linux-arm64'
-    } else if (pbPackage.linuxArch === 'armel') {
-      linuxVersion = 'linux-arm'
-    }
-    const nodeVersion = pbPackage.nodeVersion
+    const sourceVersion = packageVersion
+    const linuxVersion = ''
 
     const view = {
       toc: toc,
       usage: usage,
       commands: commands,
-      sourceVersion: sourceVersion,
+      sourceVersion: packageVersion,
       linuxVersion: linuxVersion,
-      nodeVersion: nodeVersion
+      nodeVersion: process.version, 
     }
-    const tempMd = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
+    const tempMd = destDir + '/DEBIAN/' + manName + '.md'
     fs.writeFileSync(tempMd, mustache.render(template, view), 'utf8')
-
+    console.log('File ' + tempMd + ' created')
   }
 
   /**
    * md2man
    */
-  async md2man(pbPackage: IPackage, verbose = false) {
-    // const { read, write } = await import('to-vfile')
-    // const { unified } = await import('unified')
-    // const { default: remarkMan } = await import('remark-man')
-    // const { default: remarkParse } = await import('remark-parse')
+  async md2man(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
     const echo = Utils.setEcho(verbose)
 
     if (verbose) {
       console.log('Converter.md2man()')
     }
 
-    const source = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
-    let dirname = pbPackage.destDir + '/DEBIAN/'
-    const basename = pbPackage.name
+    const source = destDir + '/DEBIAN/' + manName + '.md'
+    let dirname = destDir + '/DEBIAN/'
+    const basename = manName
     const extname = '.roll'
 
     const file = await unified()
@@ -157,33 +145,22 @@ export default class Converter {
     const man = dirname + basename + extname
     const manCompressed = dirname + basename + '.roll.gz'
     await exec('gzip -9 ' + man, echo)
-    if (pbPackage.name === 'eggs') {
-      pbPackage.name = 'penguins-eggs'
-    }
-    await exec(`cp ${manCompressed} ${pbPackage.destDir}/usr/lib/${pbPackage.name}/manpages/doc/man/${basename}.1.gz`, echo)
+    await exec(`cp ${manCompressed} ${destDir}/usr/lib/${packageName}/manpages/doc/man/${basename}.1.gz`, echo)
+
   }
 
   /**
    * md2html
    */
-  async md2html(pbPackage: IPackage, verbose = false) {
-    // const { read, write } = await import('to-vfile')
-    // const { default: remarkParse } = await import('remark-parse')
-    // const { default: remarkRehype } = await import('remark-rehype')
-    // const { default: rehypeDocument } = await import('rehype-document')
-    // const { default: rehypeFormat } = await import('rehype-format')
-    // const { default: rehypeStringify } = await import('rehype-stringify')
+  async md2html(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
     const echo = Utils.setEcho(verbose)
     if (verbose) {
       console.log('Converter.md2html()')
     }
 
-    const source = pbPackage.destDir + '/DEBIAN/' + pbPackage.name + '.md'
-    let dirname = pbPackage.destDir + '/usr/lib/' + pbPackage.name + '/manpages/doc/man/'
-    if (pbPackage.name === 'eggs') {
-      dirname = pbPackage.destDir + '/usr/lib/penguins-eggs/manpages/doc/man/'
-    }
-    const basename = pbPackage.name
+    const source = destDir + '/DEBIAN/' + manName + '.md'
+    let dirname = destDir + '/usr/lib/' + packageName + '/manpages/doc/man/'
+    const basename = manName
     const extname = '.html'
 
     const file = await unified()
@@ -198,6 +175,5 @@ export default class Converter {
     file.basename = basename
     file.extname = extname
     await write(file)
-    //await exec(`mv ${dirname}${basename}${extname} ${dirname}${basename}.1.html`, echo)
   }
 }

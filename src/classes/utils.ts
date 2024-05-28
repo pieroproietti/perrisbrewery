@@ -35,31 +35,6 @@ export default class Utils {
    }
 
 
-   static getPackageVersion(): string {
-      return "9.7.8-1"
-   }
-   static getPackageName(): string {
-      return "penguins-eggs"
-   }
-   static getPackageCmd(): string {
-      return "eggs"
-   }
-
-   /**
-    * machineUEFI
-    * @returns machineArch
-    */
-   static machineUEFI(): string {
-      // grub-mkimage vuole: i386-efi, x86_64-efi, arm-efi, arm64-efi,
-      let machineArch = this.machineArch()
-      if (machineArch === 'amd64') {
-         machineArch = 'x86_64'
-      } else if (machineArch === 'armel') {
-         machineArch = 'arm'
-      }
-      return machineArch + '-efi'
-   }
-
    /**
     * 
     * @param command 
