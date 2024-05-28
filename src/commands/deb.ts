@@ -1,4 +1,3 @@
-// https://github.com/oclif/oclif/blob/main/src/commands/pack/deb.ts
 import { Args, Command, Flags, Interfaces } from '@oclif/core'
 import { array2comma, depCommon, depArch } from '../lib/dependencies'
 import { exec } from '../lib/utils'
@@ -95,124 +94,135 @@ export default class Deb extends Command {
       process.exit(0)
     }
 
-    let content = fs.readFileSync(pathSource + 'package.json', 'utf8')
-    let packageJson = JSON.parse(content)
-    const debArch = "all" // Utils.machineArch()
-    let mantainer = packageJson.mantainer
-    if (mantainer === undefined) {
-      mantainer = packageJson.author
-    }
-    if (mantainer === undefined) {
-      mantainer = 'made on Perris\' Brewery'
-    }
-    const description = packageJson.description 
-    const packageVersion = packageJson.version
-    const packageRelease = '1'
-    const packageName = packageJson.name
-    const packageNameVersioned = `${packageName}_${packageVersion}-${packageRelease}_${debArch}`
-    const files = packageJson.files
-    const binName = Object.keys(packageJson.bin)[0];
-    const manName = binName
-    const destDir = `${here}/perrisbrewery/workdir/${packageNameVersioned}`
-  
+    // rimuove i file di lavoro
     if (fs.existsSync(`${here}perrisbrewery/workdir/`)) {
       await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
     }
 
-    await Promise.all([
-      fsPromises.mkdir(path.join(destDir, 'DEBIAN'), { recursive: true }),
-      fsPromises.mkdir(path.join(destDir, 'usr', 'bin'), { recursive: true }),
-      fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName), { recursive: true }),
-      fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName, 'manpages', 'doc', 'man'), { recursive: true }),
-    ])
-    this.log('creating package skel complete')
+    const debArchs = ['amd64', 'arm64', 'i386'];
+    // per operare sul valor for .. of
+    for (const debArch of debArchs) {
+      this.log("")
+      this.log('building arch: ' + debArch)
 
-    // create package dependencies
-    let packages = depCommon
-    const arch = Utils.machineArch()
-    depArch.forEach((dep) => {
-      if (dep.arch.includes(arch)) {
-        packages.push(dep.package)
+      let content = fs.readFileSync(pathSource + 'package.json', 'utf8')
+      let packageJson = JSON.parse(content)
+      let mantainer = packageJson.mantainer
+      if (mantainer === undefined) {
+        mantainer = packageJson.author
       }
-    })
-    packages.sort()
-    const depends = array2comma(packages)
+      if (mantainer === undefined) {
+        mantainer = 'made on Perris\' Brewery'
+      }
+      const description = packageJson.description 
+      const packageVersion = packageJson.version
+      const packageRelease = '1'
+      const packageName = packageJson.name
+      const packageNameVersioned = `${packageName}_${packageVersion}-${packageRelease}_${debArch}`
+      const files = packageJson.files
+      const binName = Object.keys(packageJson.bin)[0];
+      const destDir = `${here}/perrisbrewery/workdir/${packageNameVersioned}`
+    
 
-    // create debian control file
-    const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
-    const view = {
-      name: packageName,
-      version: packageVersion,
-      section: 'main',
-      priority: 'standard',
-      arch: debArch,
-      mantainer: mantainer,
-      description: description,
-      depends: depends,
+      await Promise.all([
+        fsPromises.mkdir(path.join(destDir, 'DEBIAN'), { recursive: true }),
+        fsPromises.mkdir(path.join(destDir, 'usr', 'bin'), { recursive: true }),
+        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName), { recursive: true }),
+        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName, 'manpages', 'doc', 'man'), { recursive: true }),
+      ])
+      this.log('creating package skel complete')
+
+      // create package dependencies
+      let packages = depCommon
+      
+      // dependencies for architecture
+      const archPackages = depArch
+        .filter(dep => dep.arch.includes(debArch))
+        .map(dep => dep.package);
+
+      packages = packages.concat(archPackages)
+
+      // sort and remove duplicates
+      packages.sort()
+
+      // convert array to comma separated string
+      const depends = array2comma(packages)
+
+      // create debian control file
+      const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
+      const view = {
+        name: packageName,
+        version: packageVersion,
+        section: 'main',
+        priority: 'standard',
+        arch: debArch,
+        mantainer: mantainer,
+        description: description,
+        depends: depends,
+      }
+      fs.writeFileSync(`${destDir}/DEBIAN/control`, mustache.render(template, view))
+      this.log('>>>creating debian control file complete')
+
+      // include debian scripts
+      await exec(`cp ./perrisbrewery/scripts/* ${destDir}/DEBIAN/`, echo)
+      this.log('>>>included debian scripts: postinst, postrm, preinst, prerm')
+
+      // create man page
+      await exec(`cp ./README.md  ${destDir}/DEBIAN/`, echo)
+      const converter = new Converter(pathSource + '/README.md')
+      await converter.readme2md(destDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
+      await converter.md2man(destDir, packageName, packageVersion, binName, verbose)
+      await converter.md2html(destDir, packageName, packageVersion, binName,  verbose)
+      this.log('>>>created man page complete')
+
+      this.log('>>>renews manpages on the source')
+      await exec(`rm -rf ${here}/manpages`, echo)
+      await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
+
+      // copia i file del pacchetto
+      let rootLib = `${destDir}/usr/lib/${packageName}`
+      await exec(`cp -r ${pathSource}/LICENSE ${rootLib}`, echo)
+      await exec(`cp -r ${pathSource}/node_modules  ${rootLib}`, echo)
+      await exec(`cp -r ${pathSource}/package.json  ${rootLib}`, echo)
+
+      // copia il lock file
+      if (fs.existsSync(pathSource + '/pnpm-lock.yaml')) {
+        await exec(`cp -r ${pathSource}/pnpm-lock.yaml  ${rootLib}`, echo)
+      }
+      if (fs.existsSync(pathSource + '/yarn.lock')) {
+        await exec(`cp -r ${pathSource}/yarn.lock  ${rootLib}`, echo)
+      }
+      if (fs.existsSync(pathSource + '/npm-shrinkwrap.json')) {
+        await exec(`cp -r ${pathSource}/npm-shrinkwrap.json  ${rootLib}`, echo)
+      }
+
+      // copia i file del pacchetto
+      for (const file in files) {
+        await exec(`cp -r ${pathSource}/${files[file]} ${rootLib}`, echo)
+      }
+      this.log('>>>imported node package complete')
+
+      // create link to node on rootLib
+      await exec(`ln -s /usr/bin/node ${rootLib}/bin/node`)
+      this.log('created link node')
+
+      // create binName
+      fs.writeFileSync(`${rootLib}/bin/${binName}`, scripts.bin(this.config))
+      await exec(`chmod 755 ${rootLib}/bin/${binName}`)
+      this.log(`>>>created exec ${binName}`)
+
+      let curDir = process.cwd()
+      process.chdir(`${destDir}/usr/bin`)
+      await exec(`ln -s ../lib/${packageName}/bin/${binName} ${binName}`)
+      process.chdir(curDir)
+      this.log(`>>>created a link on /usr/bin/ for ${binName}`)
+
+      const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
+      await exec(`sudo chown -R root "${destDir}"`)
+      await exec(`sudo chgrp -R root "${destDir}"`)
+      await exec(`${dpkgDeb} "${destDir}"`)
+      this.log(`finished building ${packageNameVersioned}.deb`)
     }
-    fs.writeFileSync(`${destDir}/DEBIAN/control`, mustache.render(template, view))
-    this.log('creating debian control file complete')
-
-    // include debian scripts
-    await exec(`cp ./perrisbrewery/scripts/* ${destDir}/DEBIAN/`, echo)
-    this.log('included debian scripts: postinst, postrm, preinst, prerm')
-
-    // create man page
-    await exec(`cp ./README.md  ${destDir}/DEBIAN/`, echo)
-    const converter = new Converter(pathSource + '/README.md')
-    await converter.readme2md(destDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
-    await converter.md2man(destDir, packageName, packageVersion, binName, verbose)
-    await converter.md2html(destDir, packageName, packageVersion, binName,  verbose)
-    this.log('created man page complete')
-
-    this.log('renews manpags on the source')
-    await exec(`rm -rf ${here}/manpages`, echo)
-    await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
-
-    // copia i file del pacchetto
-    let rootLib = `${destDir}/usr/lib/${packageName}`
-    await exec(`cp -r ${pathSource}/LICENSE ${rootLib}`, echo)
-    await exec(`cp -r ${pathSource}/node_modules  ${rootLib}`, echo)
-    await exec(`cp -r ${pathSource}/package.json  ${rootLib}`, echo)
-
-    // copia il lock file
-    if (fs.existsSync(pathSource + '/pnpm-lock.yaml')) {
-      await exec(`cp -r ${pathSource}/pnpm-lock.yaml  ${rootLib}`, echo)
-    }
-    if (fs.existsSync(pathSource + '/yarn.lock')) {
-      await exec(`cp -r ${pathSource}/yarn.lock  ${rootLib}`, echo)
-    }
-    if (fs.existsSync(pathSource + '/npm-shrinkwrap.json')) {
-      await exec(`cp -r ${pathSource}/npm-shrinkwrap.json  ${rootLib}`, echo)
-    }
-
-    // copia i file del pacchetto
-    for (const file in files) {
-      await exec(`cp -r ${pathSource}/${files[file]} ${rootLib}`, echo)
-    }
-    this.log('imported node package complete')
-
-    // create link to node on rootLib
-    await exec(`ln -s /usr/bin/node ${rootLib}/bin/node`)
-    this.log('created link node')
-
-    // create binName
-    fs.writeFileSync(`${rootLib}/bin/${binName}`, scripts.bin(this.config))
-    await exec(`chmod 755 ${rootLib}/bin/${binName}`)
-    this.log(`created exec ${binName}`)
-
-    let curDir = process.cwd()
-    process.chdir(`${destDir}/usr/bin`)
-    await exec(`ln -s ../lib/${packageName}/bin/${binName} ${binName}`)
-    process.chdir(curDir)
-    this.log(`created a link on /usr/bin/ for ${binName}`)
-
-    const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
-    await exec(`sudo chown -R root "${destDir}"`)
-    await exec(`sudo chgrp -R root "${destDir}"`)
-    await exec(`${dpkgDeb} "${destDir}"`)
-
-    this.log(`finished building ${packageNameVersioned}.deb`)
+    this.log(`complete` )
   }
 }
-

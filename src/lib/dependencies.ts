@@ -49,13 +49,13 @@ export const depCommon = [
   'dosfstools', // eggs
   'dpkg-dev', // yolk
   'git', // wardrobe
-  'grub-efi-amd64-bin', // grub
   'isolinux', // eggs
   'jq', // mom restored
   'live-boot-initramfs-tools', // eggs
   'live-boot', // eggs
   'lsb-release', // eggs
   'lvm2', // pvdisplay in krill
+  'grub2', // eggs
   'nodejs', // eggs
   'parted', // eggs
   'pxelinux', // cuckoo
@@ -71,12 +71,20 @@ export const depCommon = [
  */
 export const depArch = [
   {
-    package: 'syslinux',
-    arch: ['amd64', 'i386'],
+    arch: ['amd64'],
+    package: 'grub-efi-amd64-bin',
   },
   {
+    arch: ['amd64'],
+    package: 'syslinux',
+  },
+  {
+    arch: ['i386'],
+    package: 'syslinux',
+  },
+  {
+    arch: ['arm64'],
     package: 'syslinux-efi',
-    arch: ['arm64', 'armel'],
   },
 ]
 
