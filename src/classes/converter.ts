@@ -3,7 +3,6 @@
 */
 import fs from 'fs'
 import mustache from 'mustache'
-import { IPackage } from '../interfaces'
 
 import unified from 'unified'
 import { read, write } from 'to-vfile'
@@ -29,7 +28,7 @@ export default class Converter {
   /**
    * readme2md
    */
-  async readme2md(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
+  async readme2md(destDir: string, packageName: string, packageVersion: string, manName: string, packageNameVersioned: string, verbose = false) {
 
     if (verbose) {
       console.log('Converter.readme2md()')
@@ -108,9 +107,9 @@ export default class Converter {
       toc: toc,
       usage: usage,
       commands: commands,
-      sourceVersion: packageVersion,
+      packageVersion: packageVersion,
       linuxVersion: linuxVersion,
-      nodeVersion: process.version, 
+      packageNameVersioned: packageNameVersioned
     }
     const tempMd = destDir + '/DEBIAN/' + manName + '.md'
     fs.writeFileSync(tempMd, mustache.render(template, view), 'utf8')

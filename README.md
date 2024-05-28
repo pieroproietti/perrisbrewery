@@ -1,23 +1,23 @@
-
 # Perri's Brewery
-## version 9.5.9
-It parses the debian packages created with [oclif](https://www.npmjs.com/package/oclif) and adds the pre- and post-installation/removal scripts to them and generates the man manual page.
-
-## version 9.7.8
 Compatible with oclif 4.x, build debian packages from dist, create manpage from README.md and include prerm, postrm, preinst and postinst scripts for Debian package.
 
 # Usage
-<!-- usage -->
-```sh-session
-$ npm install -g perrisbrewery
-$ pb COMMAND
-running command...
-$ pb (--version|-v)
-perrisbrewery/9.7.11 linux-x64 node-v20.5.1
-$ pb --help [COMMAND]
-USAGE
-  $ pb COMMAND
-...
+
+Add the package to your package.json as devDependencies
+```
+  "perrisbrewery": "^9.7.11*,
+```
+
+and create a script deb:
+
+```
+  "deb": "tsc -p . && pb deb",
+```
+
+then use the script deb with your favourite package manager, mine is pnpm:
+
+```
+pnpm deb
 ```
 <!-- usagestop -->
 

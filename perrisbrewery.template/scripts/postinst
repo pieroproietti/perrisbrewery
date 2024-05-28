@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for penguins-eggs-9.7.8
+# postinst script for penguins-eggs_9.7.8-1
 #
 # see: dh_installdeb(1)
 
@@ -16,15 +16,36 @@ set -e
 #          <conflicting-package> <version>
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
-
+# echo ">>> $0 $1 $2 $3 $4<<<"
 
 case "$1" in
     configure)
+        # adapt in /usr/bin
+        if [ -f "/usr/lib/penguins-eggs/addons/eggs/adapt/bin/adapt" ]; then
+            install /usr/lib/penguins-eggs/addons/eggs/adapt/bin/adapt /usr/bin
+        fi
 
-        # Adding bash-completion for eggs
+        # love in /usr/bin
+        if [ -f "/usr/lib/penguins-eggs/scripts/love" ]; then
+            install /usr/lib/penguins-eggs/scripts/love /usr/bin
+        fi
+
+        # resy
+        if [ -f "/usr/lib/penguins-eggs/scripts/resy" ]; then
+            install /usr/lib/penguins-eggs/scripts/resy /usr/sbin
+        fi
+
+        # Adding bash-completion Debian/Devuan/Ubuntu /etc/bash_completion.d/
         if [ -d "/etc/bash_completion.d/" ]; then
             if [ -f "/usr/lib/penguins-eggs/scripts/eggs.bash" ]; then
                 cp /usr/lib/penguins-eggs/scripts/eggs.bash /etc/bash_completion.d/
+            fi
+        fi    
+
+        # Adding bash-completion elementary /usr/share/bash-completion/completions/
+        if [ -d "/usr/share/bash-completion/completions/" ]; then
+            if [ -f "/usr/lib/penguins-eggs/scripts/eggs.bash" ]; then
+                cp /usr/lib/penguins-eggs/scripts/eggs.bash /usr/share/bash-completion/completions/
             fi
         fi    
 
@@ -35,6 +56,18 @@ case "$1" in
             fi
         fi
 
+        # revitalize mom
+        if [ -f "/usr/lib/penguins-eggs/scripts/mom.sh" ]; then  
+            chmod +x /usr/lib/penguins-eggs/scripts/mom.sh
+        fi
+
+        # revitalize eui
+        if [ -d "/usr/lib/penguins-eggs/eui" ]; then  
+            chmod +x /usr/lib/penguins-eggs/eui/eui-create-image.sh
+            chmod +x /usr/lib/penguins-eggs/eui/eui-start.sh
+            chmod 0400 /usr/lib/penguins-eggs/eui/eui-users
+        fi
+
         # Adding man page
         if [ ! -d "/usr/share/man/man1" ]; then
             mkdir /usr/share/man/man1 -p
@@ -43,8 +76,6 @@ case "$1" in
             cp /usr/lib/penguins-eggs/manpages/doc/man/eggs.1.gz /usr/share/man/man1
         fi
 
-        # deve essere chiamato SOLO da new-postinst
-        # mentre viene chiamato anche da old
         eggs config --nointeractive
         echo "eggs was installed..." 
     ;;

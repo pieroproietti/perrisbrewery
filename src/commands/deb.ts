@@ -80,8 +80,7 @@ export default class Deb extends Command {
 
     if (!fs.existsSync(`${here}/perrisbrewery`)) {
       fs.mkdirSync(`${here}/perrisbrewery`)
-      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/template`)} ${here}/perrisbrewery`, echo)
-      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/scripts`)} ${here}/perrisbrewery`, echo)
+      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/`)} ${here}/perrisbrewery`, echo)
       this.log('perrisbrewery dir created in: ' + pathSource)
       this.log('Edit configuration in template e scripts. Include /perribrewery/workdir in your .gitignore.')
       this.log('After sudo npm run deb (build deb package with oclif')
@@ -161,7 +160,7 @@ export default class Deb extends Command {
     // create man page
     await exec(`cp ./README.md  ${destDir}/DEBIAN/`, echo)
     const converter = new Converter(pathSource + '/README.md')
-    await converter.readme2md(destDir, packageName, packageVersion, binName, verbose)
+    await converter.readme2md(destDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
     await converter.md2man(destDir, packageName, packageVersion, binName, verbose)
     await converter.md2html(destDir, packageName, packageVersion, binName,  verbose)
     this.log('created man page complete')

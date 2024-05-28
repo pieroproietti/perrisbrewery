@@ -1,5 +1,5 @@
 #!/bin/sh
-# preinst for penguins-eggs-9.7.8
+# preinst script for penguins-eggs_9.7.8-1
 #
 # see: dh_installdeb(1)
 
@@ -16,6 +16,8 @@ set -e
 # vedere come accontentare adriano/julian
 # https://stackoverflow.com/questions/18599599/apt-get-commands-from-within-a-deb-postinst
 # calamares è installato se esiste /var/lib/dpkg/info/calamares.list
+
+#echo ">>> $0 $1 $2 $3 $4<<<"
 
 case "$1" in
     install|upgrade)
