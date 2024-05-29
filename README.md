@@ -24,41 +24,9 @@ pnpm deb
 
 # Commands
 <!-- commands -->
-* [`pb autocomplete [SHELL]`](#pb-autocomplete-shell)
 * [`pb deb [PATHSOURCE]`](#pb-deb-pathsource)
 * [`pb help [COMMAND]`](#pb-help-command)
 * [`pb version`](#pb-version)
-
-## `pb autocomplete [SHELL]`
-
-Display autocomplete installation instructions.
-
-```
-USAGE
-  $ pb autocomplete [SHELL] [-r]
-
-ARGUMENTS
-  SHELL  (zsh|bash|powershell) Shell type
-
-FLAGS
-  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
-
-DESCRIPTION
-  Display autocomplete installation instructions.
-
-EXAMPLES
-  $ pb autocomplete
-
-  $ pb autocomplete bash
-
-  $ pb autocomplete zsh
-
-  $ pb autocomplete powershell
-
-  $ pb autocomplete --refresh-cache
-```
-
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v3.0.18/src/commands/autocomplete/index.ts)_
 
 ## `pb deb [PATHSOURCE]`
 
@@ -82,7 +50,7 @@ DESCRIPTION
   Create a deb package from your npm package
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.7.11/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.8.0/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
