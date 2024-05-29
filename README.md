@@ -5,7 +5,7 @@ Compatible with oclif 4.x, build debian packages from dist, create manpage from 
 
 Add the package to your package.json as devDependencies
 ```
-  "perrisbrewery": "^9.7.11*,
+  "perrisbrewery": "^9.7.12*,
 ```
 
 and create a script deb:
@@ -14,6 +14,7 @@ and create a script deb:
   "deb": "tsc -p . && pb deb",
 ```
 
+Create a config dir `perrisbrewery` inside the project followind the sample, 
 then use the script deb with your favourite package manager, mine is pnpm:
 
 ```

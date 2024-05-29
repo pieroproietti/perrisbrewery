@@ -1,5 +1,4 @@
 import { Args, Command, Flags, Interfaces } from '@oclif/core'
-import { array2comma, depCommon, depArch } from '../lib/dependencies'
 import { exec } from '../lib/utils'
 import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
@@ -219,3 +218,23 @@ export default class Deb extends Command {
     this.log(`complete` )
   }
 }
+
+
+
+/**
+ * @param packages array packages
+ */
+function array2comma(packages: string[]): string {
+  let commaSep = ''
+  const last = packages.length
+
+  for (let i = 0; i < last; i++) {
+    commaSep += packages[i]
+    if (i < last - 1) {
+      commaSep += ', '
+    }
+  }
+
+  return commaSep
+}
+
