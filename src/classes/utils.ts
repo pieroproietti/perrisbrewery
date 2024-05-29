@@ -16,25 +16,6 @@ const pjson = require('../../package.json')
  * @remarks all the utilities
  */
 export default class Utils {
-
-   /**
-   * machineArch
-   * arm-efi, arm64-efi,
-   * grub-mkimage -O aarch64-efi -m memdisk -o bootx64.efi -p '(memdisk)/boot/grub' search iso9660 configfile normal memdisk tar cat part_msdos part_gpt fat ext2 ntfs ntfscomp hfsplus chain boot linux
-  unknown target format aarch64-efi
-   * @returns arch
-   */
-   static machineArch(): string {
-      let arch = process.arch
-      let debArch = ''
-      if (arch === 'x64') debArch='amd64'
-      if (arch === 'ia32') debArch='i386'
-      if (arch === 'arm') debArch='armel'
-      if (arch === 'arm64') debArch='arm64'
-      return debArch
-   }
-
-
    /**
     * 
     * @param command 

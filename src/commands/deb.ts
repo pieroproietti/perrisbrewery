@@ -7,6 +7,8 @@ import Converter from '../classes/converter'
 import fs, { utimes } from 'fs'
 import mustache from 'mustache'
 import Utils from '../classes/utils'
+import {IDependency} from '../interfaces/i-dependency'
+import yaml from 'js-yaml'
 
 const scripts = {
   /* eslint-disable no-useless-escape */
@@ -131,23 +133,15 @@ export default class Deb extends Command {
       ])
       this.log('creating package skel complete')
 
-      // create package dependencies
-      let packages = depCommon
-      
-      // dependencies for architecture
-      const archPackages = depArch
-        .filter(dep => dep.arch.includes(debArch))
-        .map(dep => dep.package);
-
-      packages = packages.concat(archPackages)
-
-      // sort and remove duplicates
+      // find package dependencies
+      let fileContents = fs.readFileSync(`${here}/perrisbrewery/template/dependencies.yaml`, 'utf8')
+      let dep = yaml.load(fileContents) as IDependency
+      let packages=dep.common
+      packages=packages.concat(dep.arch[debArch])
       packages.sort()
 
-      // convert array to comma separated string
-      const depends = array2comma(packages)
-
       // create debian control file
+      const depends = array2comma(packages)
       const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
       const view = {
         name: packageName,
