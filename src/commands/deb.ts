@@ -81,7 +81,7 @@ export default class Deb extends Command {
 
     if (!fs.existsSync(`${here}/perrisbrewery`)) {
       fs.mkdirSync(`${here}/perrisbrewery`)
-      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.template/`)} ${here}/perrisbrewery`, echo)
+      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.sample/`)} ${here}/perrisbrewery`, echo)
       this.log('perrisbrewery dir created in: ' + pathSource)
       this.log('Edit configuration in template e scripts. Include /perribrewery/workdir in your .gitignore.')
       this.log('Finally run pb to rebuild your packages with manpages, scripts, etc')
