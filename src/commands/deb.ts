@@ -45,6 +45,7 @@ export default class Deb extends Command {
   }
 
   static flags = {
+    release: Flags.string({ char: 'r', description: 'release' }),
     verbose: Flags.boolean({ char: 'v', description: 'verbose' }),
     help: Flags.help({ char: 'h' }),
     mantain: Flags.boolean({ char: 'm' }),
@@ -58,9 +59,15 @@ export default class Deb extends Command {
   async run(): Promise<void> {
     const { args, flags } = await this.parse(Deb)
 
+
     if (process.platform !== 'linux') {
       this.log('debian packing must be run on linux')
       this.exit(0)
+    }
+
+    let release = flags.release
+    if (release === undefined) {
+      release = '1'
     }
 
     const verbose = flags.verbose
@@ -116,7 +123,7 @@ export default class Deb extends Command {
       }
       const description = packageJson.description 
       const packageVersion = packageJson.version
-      const packageRelease = '1'
+      const packageRelease = release
       const packageName = packageJson.name
       const packageNameVersioned = `${packageName}_${packageVersion}-${packageRelease}_${debArch}`
       const files = packageJson.files
@@ -225,16 +232,6 @@ export default class Deb extends Command {
  * @param packages array packages
  */
 function array2comma(packages: string[]): string {
-  let commaSep = ''
-  const last = packages.length
-
-  for (let i = 0; i < last; i++) {
-    commaSep += packages[i]
-    if (i < last - 1) {
-      commaSep += ', '
-    }
-  }
-
-  return commaSep
+  return packages.join(', ');
 }
 
