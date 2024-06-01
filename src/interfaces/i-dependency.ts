@@ -1,14 +1,14 @@
 export interface IDependency {
-    common: string[],
     arch: {
+        [key: string]: string[]; // Add this line
         amd64: string[],
         arm64: string[],
         i386: string[],
-        [key: string]: string[]; // Add this line
     }
+    common: string[],
     version: {
+        [key: string]: string[]; // Add this line
         jessie: string[],
         stretch: string[],
-        [key: string]: string[]; // Add this line        
     }
 }

@@ -1,13 +1,16 @@
-import { Args, Command, Flags, Interfaces } from '@oclif/core'
-import { exec } from '../lib/utils'
+import {
+  Args, Command, Flags, Interfaces,
+} from '@oclif/core'
+import fs, {utimes} from 'fs'
+import yaml from 'js-yaml'
+import mustache from 'mustache'
 import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
+
 import Converter from '../classes/converter'
-import fs, { utimes } from 'fs'
-import mustache from 'mustache'
 import Utils from '../classes/utils'
 import {IDependency} from '../interfaces/i-dependency'
-import yaml from 'js-yaml'
+import {exec} from '../lib/utils'
 
 const scripts = {
   /* eslint-disable no-useless-escape */
@@ -28,49 +31,47 @@ get_script_dir () {
 }
 DIR=\$(get_script_dir)
 export ${config.scopedEnvVarKey('UPDATE_INSTRUCTIONS')}="update with \\"sudo apt update && sudo apt install ${config.bin
-    }\\""
+}\\""
 \$DIR/node \$DIR/run "\$@"
 `,
 }
 
-
 /**
- * 
+ *
  */
 export default class Deb extends Command {
-  static description = 'Create a deb package from your npm package'
-
   static args = {
-    pathSource: Args.string({ name: 'pathSource', description: 'pathSource', required: false }),
+    pathSource: Args.string({description: 'pathSource', name: 'pathSource', required: false}),
   }
 
+  static description = 'Create a deb package from your npm package'
+
   static flags = {
-    release: Flags.string({ char: 'r', description: 'release' }),
-    verbose: Flags.boolean({ char: 'v', description: 'verbose' }),
-    help: Flags.help({ char: 'h' }),
-    mantain: Flags.boolean({ char: 'm' }),
+    help: Flags.help({char: 'h'}),
+    mantain: Flags.boolean({char: 'm'}),
+    release: Flags.string({char: 'r', description: 'release'}),
+    verbose: Flags.boolean({char: 'v', description: 'verbose'}),
   }
 
   static summary = 'Pack CLI into debian package.'
 
   /**
-   * 
+   *
    */
   async run(): Promise<void> {
-    const { args, flags } = await this.parse(Deb)
-
+    const {args, flags} = await this.parse(Deb)
 
     if (process.platform !== 'linux') {
       this.log('debian packing must be run on linux')
       this.exit(0)
     }
 
-    let release = flags.release
+    let {release} = flags
     if (release === undefined) {
       release = '1'
     }
 
-    const verbose = flags.verbose
+    const {verbose} = flags
     const echo = Utils.setEcho(verbose)
 
     // Crea configurazione per il pacchetto
@@ -78,25 +79,25 @@ export default class Deb extends Command {
     let pathSource = here
 
     if (args.pathSource !== undefined) {
-      if (pathSource.substring(pathSource.length, -1) !== '/') {
-        pathSource = args.pathSource + '/'
-      } else {
+      if (pathSource.substring(pathSource.length, -1) === '/') {
         pathSource = args.pathSource
+      } else {
+        pathSource = args.pathSource + '/'
       }
     }
 
-    if (!fs.existsSync(`${here}/perrisbrewery`)) {
+    if (fs.existsSync(`${here}/perrisbrewery`)) {
+      this.log('perrisbrewery configurations already exists')
+    } else {
       fs.mkdirSync(`${here}/perrisbrewery`)
-      await exec(`cp -r ${path.resolve(__dirname, `../perrisbrewery.sample/*`)} ${here}/perrisbrewery`, echo)
+      await exec(`cp -r ${path.resolve(__dirname, '../perrisbrewery.sample/*')} ${here}/perrisbrewery`, echo)
       this.log('perrisbrewery dir created in: ' + pathSource)
       this.log('Edit configuration in template e scripts. Include /perribrewery/workdir in your .gitignore.')
       this.log('Finally run pb to rebuild your packages with manpages, scripts, etc')
       process.exit(0)
-    } else {
-      this.log('perrisbrewery configurations already exists')
     }
 
-    if (! fs.existsSync(pathSource + 'package.json')) {
+    if (!fs.existsSync(pathSource + 'package.json')) {
       console.log('package.json not found in ' + pathSource)
       process.exit(0)
     }
@@ -106,58 +107,59 @@ export default class Deb extends Command {
       await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
     }
 
-    const debArchs = ['amd64', 'arm64', 'i386'];
+    const debArchs = ['amd64', 'arm64', 'i386']
     // per operare sul valor for .. of
     for (const debArch of debArchs) {
-      this.log("")
+      this.log('')
       this.log('building arch: ' + debArch)
 
-      let content = fs.readFileSync(pathSource + 'package.json', 'utf8')
-      let packageJson = JSON.parse(content)
-      let mantainer = packageJson.mantainer
+      const content = fs.readFileSync(pathSource + 'package.json', 'utf8')
+      const packageJson = JSON.parse(content)
+      let {mantainer} = packageJson
       if (mantainer === undefined) {
         mantainer = packageJson.author
       }
+
       if (mantainer === undefined) {
         mantainer = 'made on Perris\' Brewery'
       }
-      const description = packageJson.description 
+
+      const {description} = packageJson
       const packageVersion = packageJson.version
       const packageRelease = release
       const packageName = packageJson.name
       const packageNameVersioned = `${packageName}_${packageVersion}-${packageRelease}_${debArch}`
-      const files = packageJson.files
-      const binName = Object.keys(packageJson.bin)[0];
+      const {files} = packageJson
+      const binName = Object.keys(packageJson.bin)[0]
       const destDir = `${here}/perrisbrewery/workdir/${packageNameVersioned}`
-    
 
       await Promise.all([
-        fsPromises.mkdir(path.join(destDir, 'DEBIAN'), { recursive: true }),
-        fsPromises.mkdir(path.join(destDir, 'usr', 'bin'), { recursive: true }),
-        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName), { recursive: true }),
-        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName, 'manpages', 'doc', 'man'), { recursive: true }),
+        fsPromises.mkdir(path.join(destDir, 'DEBIAN'), {recursive: true}),
+        fsPromises.mkdir(path.join(destDir, 'usr', 'bin'), {recursive: true}),
+        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName), {recursive: true}),
+        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName, 'manpages', 'doc', 'man'), {recursive: true}),
       ])
       this.log('creating package skel complete')
 
       // find package dependencies
-      let fileContents = fs.readFileSync(`${here}/perrisbrewery/template/dependencies.yaml`, 'utf8')
-      let dep = yaml.load(fileContents) as IDependency
-      let packages=dep.common
-      packages=packages.concat(dep.arch[debArch])
+      const fileContents = fs.readFileSync(`${here}/perrisbrewery/template/dependencies.yaml`, 'utf8')
+      const dep = yaml.load(fileContents) as IDependency
+      let packages = dep.common
+      packages = packages.concat(dep.arch[debArch])
       packages.sort()
 
       // create debian control file
       const depends = array2comma(packages)
       const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
       const view = {
-        name: packageName,
-        version: packageVersion,
-        section: 'main',
-        priority: 'standard',
         arch: debArch,
-        mantainer: mantainer,
-        description: description,
-        depends: depends,
+        depends,
+        description,
+        mantainer,
+        name: packageName,
+        priority: 'standard',
+        section: 'main',
+        version: packageVersion,
       }
       fs.writeFileSync(`${destDir}/DEBIAN/control`, mustache.render(template, view))
       this.log('>>> creating debian control file complete')
@@ -179,7 +181,7 @@ export default class Deb extends Command {
       await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
 
       // copia i file del pacchetto
-      let rootLib = `${destDir}/usr/lib/${packageName}`
+      const rootLib = `${destDir}/usr/lib/${packageName}`
       await exec(`cp -r ${pathSource}/LICENSE ${rootLib}`, echo)
       await exec(`cp -r ${pathSource}/node_modules  ${rootLib}`, echo)
       await exec(`cp -r ${pathSource}/package.json  ${rootLib}`, echo)
@@ -188,9 +190,11 @@ export default class Deb extends Command {
       if (fs.existsSync(pathSource + '/pnpm-lock.yaml')) {
         await exec(`cp -r ${pathSource}/pnpm-lock.yaml  ${rootLib}`, echo)
       }
+
       if (fs.existsSync(pathSource + '/yarn.lock')) {
         await exec(`cp -r ${pathSource}/yarn.lock  ${rootLib}`, echo)
       }
+
       if (fs.existsSync(pathSource + '/npm-shrinkwrap.json')) {
         await exec(`cp -r ${pathSource}/npm-shrinkwrap.json  ${rootLib}`, echo)
       }
@@ -199,6 +203,7 @@ export default class Deb extends Command {
       for (const file in files) {
         await exec(`cp -r ${pathSource}/${files[file]} ${rootLib}`, echo)
       }
+
       this.log('>>> imported node package complete')
 
       // create link to node on rootLib
@@ -210,7 +215,7 @@ export default class Deb extends Command {
       await exec(`chmod 755 ${rootLib}/bin/${binName}`)
       this.log(`>>> created exec ${binName}`)
 
-      let curDir = process.cwd()
+      const curDir = process.cwd()
       process.chdir(`${destDir}/usr/bin`)
       await exec(`ln -s ../lib/${packageName}/bin/${binName} ${binName}`)
       process.chdir(curDir)
@@ -222,16 +227,15 @@ export default class Deb extends Command {
       await exec(`${dpkgDeb} "${destDir}"`)
       this.log(`finished building ${packageNameVersioned}.deb`)
     }
-    this.log(`complete` )
+
+    this.log('complete')
   }
 }
-
-
 
 /**
  * @param packages array packages
  */
 function array2comma(packages: string[]): string {
-  return packages.join(', ');
+  return packages.join(', ')
 }
 

@@ -3,17 +3,16 @@
 */
 import fs from 'fs'
 import mustache from 'mustache'
-
-import unified from 'unified'
-import { read, write } from 'to-vfile'
-import remarkMan from 'remark-man'
-import remarkParse from 'remark-parse'
-
-import remarkRehype from 'remark-rehype'
 import rehypeDocument from 'rehype-document'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
-import { exec } from '../lib/utils'
+import remarkMan from 'remark-man'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import {read, write} from 'to-vfile'
+import unified from 'unified'
+
+import {exec} from '../lib/utils'
 import Utils from './utils'
 
 /**
@@ -26,14 +25,73 @@ export default class Converter {
   }
 
   /**
+   * md2html
+   */
+  async md2html(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
+    const echo = Utils.setEcho(verbose)
+    if (verbose) {
+      console.log('Converter.md2html()')
+    }
+
+    const source = destDir + '/DEBIAN/' + manName + '.md'
+    const dirname = destDir + '/usr/lib/' + packageName + '/manpages/doc/man/'
+    const basename = manName
+    const extname = '.html'
+
+    const file = await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeDocument)
+    .use(rehypeFormat)
+    .use(rehypeStringify)
+    .process(await read(source))
+
+    file.dirname = dirname
+    file.basename = basename
+    file.extname = extname
+    await write(file)
+  }
+
+  /**
+   * md2man
+   */
+  async md2man(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
+    const echo = Utils.setEcho(verbose)
+
+    if (verbose) {
+      console.log('Converter.md2man()')
+    }
+
+    const source = destDir + '/DEBIAN/' + manName + '.md'
+    const dirname = destDir + '/DEBIAN/'
+    const basename = manName
+    const extname = '.roll'
+
+    const file = await unified()
+    .use(remarkParse)
+    .use(remarkMan)
+    .process(await read(source))
+
+    file.dirname = dirname
+    file.basename = basename
+    file.extname = extname
+    await write(file)
+
+    const man = dirname + basename + extname
+    const manCompressed = dirname + basename + '.roll.gz'
+    await exec('gzip -9 ' + man, echo)
+    await exec(`cp ${manCompressed} ${destDir}/usr/lib/${packageName}/manpages/doc/man/${basename}.1.gz`, echo)
+  }
+
+  /**
    * readme2md
    */
   async readme2md(destDir: string, packageName: string, packageVersion: string, manName: string, packageNameVersioned: string, verbose = false) {
-
     if (verbose) {
       console.log('Converter.readme2md()')
     }
-    const readme = fs.readFileSync(this.readmeName, 'utf-8').split('\n')
+
+    const readme = fs.readFileSync(this.readmeName, 'utf8').split('\n')
 
     /**
      * Sezioni: toc, usage, commands
@@ -52,46 +110,50 @@ export default class Converter {
     const commandsStart = '<!-- commands -->'
     let isCommands = false
     const commandsStop = '<!-- commandsstop -->'
-    for (let i = 0; i < readme.length; i++) {
+    for (const element of readme) {
       let isComment = false
-      if (readme[i].includes('<!--')) {
+      if (element.includes('<!--')) {
         isComment = false
 
-        if (readme[i].includes(tocStart)) {
+        if (element.includes(tocStart)) {
           isToc = true
         }
-        if (readme[i].includes(tocStop)) {
+
+        if (element.includes(tocStop)) {
           isToc = false
         }
 
-        if (readme[i].includes(usageStart)) {
+        if (element.includes(usageStart)) {
           isUsage = true
         }
-        if (readme[i].includes(usageStop)) {
+
+        if (element.includes(usageStop)) {
           isUsage = false
         }
 
-        if (readme[i].includes(commandsStart)) {
+        if (element.includes(commandsStart)) {
           isCommands = true
         }
-        if (readme[i].includes(commandsStop)) {
+
+        if (element.includes(commandsStop)) {
           isCommands = false
         }
       }
 
       // Aggiunge la linea alla sezione
       if (isToc && !isComment) {
-        toc += readme[i] + '\n'
+        toc += element + '\n'
       }
+
       if (isUsage && !isComment) {
-        usage += readme[i] + '\n'
+        usage += element + '\n'
       }
-      if (isCommands && !isComment) {
-        if (!readme[i].includes('See code:')) {
-          commands += readme[i] + '\n'
-        }
+
+      if (isCommands && !isComment && !element.includes('See code:')) {
+        commands += element + '\n'
       }
     }
+
     toc = ''
     usage = usage.toString()
 
@@ -104,75 +166,15 @@ export default class Converter {
     const linuxVersion = ''
 
     const view = {
-      toc: toc,
-      usage: usage,
-      commands: commands,
-      packageVersion: packageVersion,
-      linuxVersion: linuxVersion,
-      packageNameVersioned: packageNameVersioned
+      commands,
+      linuxVersion,
+      packageNameVersioned,
+      packageVersion,
+      toc,
+      usage,
     }
     const tempMd = destDir + '/DEBIAN/' + manName + '.md'
     fs.writeFileSync(tempMd, mustache.render(template, view), 'utf8')
     console.log('File ' + tempMd + ' created')
-  }
-
-  /**
-   * md2man
-   */
-  async md2man(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
-    const echo = Utils.setEcho(verbose)
-
-    if (verbose) {
-      console.log('Converter.md2man()')
-    }
-
-    const source = destDir + '/DEBIAN/' + manName + '.md'
-    let dirname = destDir + '/DEBIAN/'
-    const basename = manName
-    const extname = '.roll'
-
-    const file = await unified()
-      .use(remarkParse)
-      .use(remarkMan)
-      .process(await read(source))
-
-    file.dirname = dirname
-    file.basename = basename
-    file.extname = extname
-    await write(file)
-
-    const man = dirname + basename + extname
-    const manCompressed = dirname + basename + '.roll.gz'
-    await exec('gzip -9 ' + man, echo)
-    await exec(`cp ${manCompressed} ${destDir}/usr/lib/${packageName}/manpages/doc/man/${basename}.1.gz`, echo)
-
-  }
-
-  /**
-   * md2html
-   */
-  async md2html(destDir: string, packageName: string, packageVersion: string, manName: string, verbose = false) {
-    const echo = Utils.setEcho(verbose)
-    if (verbose) {
-      console.log('Converter.md2html()')
-    }
-
-    const source = destDir + '/DEBIAN/' + manName + '.md'
-    let dirname = destDir + '/usr/lib/' + packageName + '/manpages/doc/man/'
-    const basename = manName
-    const extname = '.html'
-
-    const file = await unified()
-      .use(remarkParse)
-      .use(remarkRehype)
-      .use(rehypeDocument)
-      .use(rehypeFormat)
-      .use(rehypeStringify)
-      .process(await read(source))
-
-    file.dirname = dirname
-    file.basename = basename
-    file.extname = extname
-    await write(file)
   }
 }

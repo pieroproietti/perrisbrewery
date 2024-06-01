@@ -1,3 +1,3 @@
-export { IExec } from './i-exec'
-export { IDependency } from './i-dependency'
+export {IDependency} from './i-dependency'
+export {IExec} from './i-exec'
 
