@@ -1,6 +1,6 @@
 {
   "name": "perrisbrewery",
-  "description": "create manpages, insert preinst, postinst, prerm and postrm",
+  "description": "Create manpages, insert preinst, postinst, prerm and postrm",
   "version": "9.8.2",
   "author": "Piero Proietti",
   "bin": {
@@ -55,7 +55,7 @@
     "/dist",
     "/perrisbrewery"
   ],
-  "homepage": "https://github.com/pieroproietti/perrisbrewery",
+  "homepage": "https://penguins-eggs.net",
   "keywords": [
     "oclif",
     "penguins-eggs"
