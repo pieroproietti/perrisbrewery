@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "create manpages, insert preinst, postinst, prerm and postrm",
-  "version": "9.8.1",
+  "version": "9.8.2",
   "author": "Piero Proietti",
   "bin": {
     "pb": "./bin/run.js"
