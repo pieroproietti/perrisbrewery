@@ -11,12 +11,14 @@ common:
   - git # wardrobe
   - isolinux # eggs
   - jq # mom
-  - live-boot-initramfs-tools # eggs
   - live-boot # eggs
+  - live-boot-doc # eggs
+  - live-boot-initramfs-tools # eggs
+  - 'live-config-systemd | live-config-sysvinit'
+  - live-tools # eggs
   - lsb-release  # eggs
   - lvm2  # pvdisplay in krill
-  - grub2
-  - nodejs 
+  - nodejs (>= 18)
   - parted 
   - pxelinux # cuckoo
   - rsync
@@ -25,7 +27,6 @@ common:
   - syslinux-common
   - xorriso
 
-##
 # dependencies arch specific
 arch:
   amd64:
@@ -37,23 +38,3 @@ arch:
 
   arm64:
   - syslinux-efi
-
-##
-# dependencies version
-version:
-  jessie:
-  - live-config
-  - live-config-systemd
-  stretch:
-  - live-config
-  - live-config-systemd
-
-# dependencies for the init system
-init:
-  beowulf:
-  - live-config-sysvinit
-  bionic:
-  - open-infrastructure-system-config
-
-#init:  
-#- live-config-sysvinit

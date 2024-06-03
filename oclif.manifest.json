@@ -11,13 +11,6 @@
       },
       "description": "Create a deb package from your npm package",
       "flags": {
-        "verbose": {
-          "char": "v",
-          "description": "verbose",
-          "name": "verbose",
-          "allowNo": false,
-          "type": "boolean"
-        },
         "help": {
           "char": "h",
           "description": "Show CLI help.",
@@ -28,6 +21,21 @@
         "mantain": {
           "char": "m",
           "name": "mantain",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "release": {
+          "char": "r",
+          "description": "release",
+          "name": "release",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "verbose": {
+          "char": "v",
+          "description": "verbose",
+          "name": "verbose",
           "allowNo": false,
           "type": "boolean"
         }
@@ -49,5 +57,5 @@
       ]
     }
   },
-  "version": "9.8.0"
+  "version": "9.8.1"
 }

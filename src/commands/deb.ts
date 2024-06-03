@@ -110,6 +110,7 @@ export default class Deb extends Command {
     const debArchs = ['amd64', 'arm64', 'i386']
     // per operare sul valor for .. of
     for (const debArch of debArchs) {
+      //const debArch = ['any']
       this.log('')
       this.log('building arch: ' + debArch)
 
@@ -159,7 +160,7 @@ export default class Deb extends Command {
         name: packageName,
         priority: 'standard',
         section: 'main',
-        version: packageVersion,
+        version: `${packageVersion}-${packageRelease}`,
       }
       fs.writeFileSync(`${destDir}/DEBIAN/control`, mustache.render(template, view))
       this.log('>>> creating debian control file complete')
@@ -221,7 +222,8 @@ export default class Deb extends Command {
       process.chdir(curDir)
       this.log(`>>> created a link on /usr/bin/ for ${binName}`)
 
-      const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
+      //const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
+      const dpkgDeb = `dpkg-deb --build`
       await exec(`sudo chown -R root "${destDir}"`)
       await exec(`sudo chgrp -R root "${destDir}"`)
       await exec(`${dpkgDeb} "${destDir}"`)
@@ -236,6 +238,7 @@ export default class Deb extends Command {
  * @param packages array packages
  */
 function array2comma(packages: string[]): string {
-  return packages.join(', ')
+  return packages.join(',\n         ')    
+  //return packages.join(', ')
 }
 
