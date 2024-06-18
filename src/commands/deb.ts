@@ -48,6 +48,7 @@ export default class Deb extends Command {
 
   static flags = {
     help: Flags.help({char: 'h'}),
+    codename: Flags.string({char: 'c', description: 'codename'}),
     mantain: Flags.boolean({char: 'm'}),
     release: Flags.string({char: 'r', description: 'release'}),
     verbose: Flags.boolean({char: 'v', description: 'verbose'}),
@@ -64,6 +65,11 @@ export default class Deb extends Command {
     if (process.platform !== 'linux') {
       this.log('debian packing must be run on linux')
       this.exit(0)
+    }
+
+    let {codename} = flags
+    if (codename === undefined) {
+      codename = ''
     }
 
     let {release} = flags
@@ -107,10 +113,13 @@ export default class Deb extends Command {
       await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
     }
 
-    const debArchs = ['amd64', 'arm64', 'i386']
+    let debArchs = ['amd64', 'arm64', 'i386']
+    if (codename === 'bionic') {
+      debArchs = ['amd64']
+    }
+    
     // per operare sul valor for .. of
     for (const debArch of debArchs) {
-      //const debArch = ['any']
       this.log('')
       this.log('building arch: ' + debArch)
 
@@ -129,7 +138,10 @@ export default class Deb extends Command {
       const packageVersion = packageJson.version
       const packageRelease = release
       const packageName = packageJson.name
-      const packageNameVersioned = `${packageName}_${packageVersion}-${packageRelease}_${debArch}`
+      let packageNameVersioned = `${packageName}_${packageVersion}-${packageRelease}_${debArch}`
+      if (codename === 'bionic') {
+        packageNameVersioned = `${packageName}_${packageVersion}-bionic-${packageRelease}_${debArch}`
+      }
       const {files} = packageJson
       const binName = Object.keys(packageJson.bin)[0]
       const destDir = `${here}/perrisbrewery/workdir/${packageNameVersioned}`
@@ -143,7 +155,12 @@ export default class Deb extends Command {
       this.log('creating package skel complete')
 
       // find package dependencies
-      const fileContents = fs.readFileSync(`${here}/perrisbrewery/template/dependencies.yaml`, 'utf8')
+      let dependenciesFile="dependencies.yaml"
+      if (codename==='bionic') {
+        console.log("codename: bionic")
+        dependenciesFile="dependencies-bionic.yaml"
+      }
+      let fileContents = fs.readFileSync(`${here}/perrisbrewery/template/${dependenciesFile}`, 'utf8')
       const dep = yaml.load(fileContents) as IDependency
       let packages = dep.common
       packages = packages.concat(dep.arch[debArch])
