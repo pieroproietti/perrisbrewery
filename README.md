@@ -34,16 +34,17 @@ Pack CLI into debian package.
 
 ```
 USAGE
-  $ pb deb [PATHSOURCE] [-h] [-m] [-r <value>] [-v]
+  $ pb deb [PATHSOURCE] [-h] [-c <value>] [-m] [-r <value>] [-v]
 
 ARGUMENTS
   PATHSOURCE  pathSource
 
 FLAGS
-  -h, --help             Show CLI help.
+  -c, --codename=<value>  codename
+  -h, --help              Show CLI help.
   -m, --mantain
-  -r, --release=<value>  release
-  -v, --verbose          verbose
+  -r, --release=<value>   release
+  -v, --verbose           verbose
 
 DESCRIPTION
   Pack CLI into debian package.
@@ -51,7 +52,7 @@ DESCRIPTION
   Create a deb package from your npm package
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.8.3/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.8.4/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
@@ -71,7 +72,7 @@ DESCRIPTION
   Display help for pb.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.1.0/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.3/src/commands/help.ts)_
 
 ## `pb version`
 
@@ -91,7 +92,7 @@ FLAG DESCRIPTIONS
     Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.0/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.4/src/commands/version.ts)_
 <!-- commandsstop -->
 
 # More informations

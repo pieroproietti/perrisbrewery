@@ -4,6 +4,9 @@ perri's brewery
 # Changelog
 Versions are listed on reverse order, the first is the last one.
 
+## perrisbrewery-9.8.6
+* build deb packages for all the architecture plus amd64 bionic from the same codebase.
+
 ## perrisbrewery-9.8.1
 Passaggio a moduli Node16, per Commonjs  ed ECMAscript.
 
