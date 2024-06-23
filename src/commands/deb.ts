@@ -48,6 +48,7 @@ export default class Deb extends Command {
 
   static flags = {
     help: Flags.help({char: 'h'}),
+    all: Flags.boolean({char: 'a', description: 'all architectures'}),
     codename: Flags.string({char: 'c', description: 'codename'}),
     mantain: Flags.boolean({char: 'm'}),
     release: Flags.string({char: 'r', description: 'release'}),
@@ -66,6 +67,12 @@ export default class Deb extends Command {
       this.log('debian packing must be run on linux')
       this.exit(0)
     }
+
+    let all = flags.all
+    if (all === undefined) {
+      all = false
+    }
+
 
     let {codename} = flags
     if (codename === undefined) {
@@ -113,7 +120,20 @@ export default class Deb extends Command {
       await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
     }
 
-    let debArchs = ['amd64', 'arm64', 'i386']
+    // Decido le architetture da costruire
+    let debArchs = ['amd64']
+    if (all) {
+      debArchs = ['amd64', 'arm64', 'i386']
+    } else {
+      if (process.arch === 'x64') {
+        debArchs= ['amd64']
+      } else if (process.arch === 'arm64') {
+        debArchs= ['arm64']
+      } else if (process.arch === 'ia32') {
+        debArchs= ['i386']
+      }
+    }
+  
     if (codename === 'bionic') {
       debArchs = ['amd64']
     }

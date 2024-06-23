@@ -18,6 +18,21 @@
           "allowNo": false,
           "type": "boolean"
         },
+        "all": {
+          "char": "a",
+          "description": "all architectures",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "codename": {
+          "char": "c",
+          "description": "codename",
+          "name": "codename",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
         "mantain": {
           "char": "m",
           "name": "mantain",
@@ -57,5 +72,5 @@
       ]
     }
   },
-  "version": "9.8.3"
+  "version": "9.8.7"
 }

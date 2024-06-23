@@ -34,12 +34,13 @@ Pack CLI into debian package.
 
 ```
 USAGE
-  $ pb deb [PATHSOURCE] [-h] [-c <value>] [-m] [-r <value>] [-v]
+  $ pb deb [PATHSOURCE] [-h] [-a] [-c <value>] [-m] [-r <value>] [-v]
 
 ARGUMENTS
   PATHSOURCE  pathSource
 
 FLAGS
+  -a, --all               all architectures
   -c, --codename=<value>  codename
   -h, --help              Show CLI help.
   -m, --mantain
@@ -52,7 +53,7 @@ DESCRIPTION
   Create a deb package from your npm package
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.8.6/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v9.8.7/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
