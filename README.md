@@ -24,8 +24,37 @@ pnpm deb
 
 # Commands
 <!-- commands -->
+* [`pb deb [PATHSOURCE]`](#pb-deb-pathsource)
 * [`pb help [COMMAND]`](#pb-help-command)
 * [`pb version`](#pb-version)
+
+## `pb deb [PATHSOURCE]`
+
+Pack CLI into debian package.
+
+```
+USAGE
+  $ pb deb [PATHSOURCE] [-h] [-a] [-c <value>] [-m] [-r <value>] [-M] [-v]
+
+ARGUMENTS
+  PATHSOURCE  pathSource
+
+FLAGS
+  -M, --manpages          refresh manpages on the sources
+  -a, --all               all architectures
+  -c, --codename=<value>  codename
+  -h, --help              Show CLI help.
+  -m, --mantain
+  -r, --release=<value>   release
+  -v, --verbose           verbose
+
+DESCRIPTION
+  Pack CLI into debian package.
+
+  Create a deb package from your npm package
+```
+
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v10.0.2/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
