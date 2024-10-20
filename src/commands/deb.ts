@@ -52,6 +52,7 @@ export default class Deb extends Command {
     codename: Flags.string({char: 'c', description: 'codename'}),
     mantain: Flags.boolean({char: 'm'}),
     release: Flags.string({char: 'r', description: 'release'}),
+    manpages: Flags.boolean({char: 'M', description: 'refresh manpages on the sources'}),
     verbose: Flags.boolean({char: 'v', description: 'verbose'}),
   }
 
@@ -67,6 +68,8 @@ export default class Deb extends Command {
       this.log('debian packing must be run on linux')
       this.exit(0)
     }
+
+    let manpages = flags.manpages
 
     let all = flags.all
     if (all === undefined) {
@@ -214,9 +217,11 @@ export default class Deb extends Command {
       await converter.md2html(destDir, packageName, packageVersion, binName,  verbose)
       this.log('>>> created man page complete')
 
-      this.log('>>> renews manpages on the source')
-      await exec(`rm -rf ${here}/manpages`, echo)
-      await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
+      if (manpages) {
+        this.log('>>> refresh manpages on the sources')
+        await exec(`rm -rf ${here}/manpages`, echo)
+        await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
+      }
 
       // copia i file del pacchetto
       const rootLib = `${destDir}/usr/lib/${packageName}`
