@@ -270,9 +270,12 @@ export default class Deb extends Command {
       await exec(`sudo chgrp -R root "${destDir}"`)
       await exec(`${dpkgDeb} "${destDir}"`)
       this.log(`finished building ${packageNameVersioned}.deb`)
+
+      this.log(`Creating sha256sum on ${destDir}.deb`)
+      await exec(`sha256sum ${destDir}.deb > ${destDir}.sha256`)
     }
 
-    this.log('complete')
+    this.log('Complete!')
   }
 }
 
