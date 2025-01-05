@@ -272,7 +272,10 @@ export default class Deb extends Command {
       this.log(`finished building ${packageNameVersioned}.deb`)
 
       this.log(`Creating sha256sum on ${destDir}.deb`)
-      await exec(`sha256sum ${destDir}.deb > ${destDir}.sha256`)
+      let savedDir=process.cwd()
+      process.chdir(`${here}/perrisbrewery/workdir/`)
+      await exec(`sha256sum ${packageNameVersioned}.deb > ${packageNameVersioned}.sha256`)
+      process.chdir(savedDir)
     }
 
     this.log('Complete!')
