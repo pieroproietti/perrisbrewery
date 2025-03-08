@@ -39,7 +39,7 @@
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^8.57.0",
     "eslint-config-oclif": "^5.2.2",
-    "eslint-config-oclif-typescript": "^3.1.13",
+    "eslint-config-oclif-typescript": "^3.1.14",
     "eslint-config-prettier": "^9.1.0",
     "globby": "^11.1.0",
     "nps": "^5.10.0",
