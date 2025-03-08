@@ -41,7 +41,7 @@
     "eslint-config-oclif": "^5.2.2",
     "eslint-config-oclif-typescript": "^3.1.14",
     "eslint-config-prettier": "^9.1.0",
-    "globby": "^11.1.0",
+    "globby": "^14.1.0",
     "nps": "^5.10.0",
     "oclif": "^4.17.34",
     "ts-node": "^10.9.2"
