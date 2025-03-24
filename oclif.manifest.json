@@ -77,6 +77,56 @@
         "commands",
         "deb.js"
       ]
+    },
+    "tarballs": {
+      "aliases": [],
+      "args": {
+        "tarballs": {
+          "description": "pathTarballs",
+          "name": "tarballs",
+          "required": false
+        }
+      },
+      "description": "Tarballs",
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "Show CLI help.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "release": {
+          "char": "r",
+          "description": "release",
+          "name": "release",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "verbose": {
+          "char": "v",
+          "description": "verbose",
+          "name": "verbose",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "tarballs",
+      "pluginAlias": "perrisbrewery",
+      "pluginName": "perrisbrewery",
+      "pluginType": "core",
+      "strict": true,
+      "summary": "rename tarballs with release.",
+      "enableJsonFlag": false,
+      "isESM": false,
+      "relativePath": [
+        "dist",
+        "commands",
+        "tarballs.js"
+      ]
     }
   },
   "version": "10.0.4"
