@@ -8,11 +8,11 @@
   },
   "bugs": "https://github.com/pieroproietti/perrisbrewery/issues",
   "dependencies": {
-    "@oclif/core": "^4.2.9",
-    "@oclif/plugin-autocomplete": "^3.2.24",
-    "@oclif/plugin-help": "^6.2.26",
-    "@oclif/plugin-version": "^2.2.25",
-    "@oclif/test": "^4.1.11",
+    "@oclif/core": "^4.2.10",
+    "@oclif/plugin-autocomplete": "^3.2.26",
+    "@oclif/plugin-help": "^6.2.27",
+    "@oclif/plugin-version": "^2.2.27",
+    "@oclif/test": "^4.1.12",
     "chalk": "^4.1.2",
     "fs-extra": "^8.1.0",
     "inquirer": "8.2.4",
@@ -27,7 +27,7 @@
     "shelljs": "0.8.5",
     "to-vfile": "6.1.0",
     "tslib": "2.8.1",
-    "typescript": "^5.7.2",
+    "typescript": "^5.8.2",
     "unified": "^9.2.2"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     "eslint-config-prettier": "^9.1.0",
     "globby": "^14.1.0",
     "nps": "^5.10.0",
-    "oclif": "^4.17.34",
+    "oclif": "^4.17.41",
     "ts-node": "^10.9.2"
   },
   "dirname": "pb",
