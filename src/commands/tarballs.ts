@@ -42,5 +42,27 @@ export default class Tarballs extends Command {
     const {verbose} = flags
     const echo = Utils.setEcho(verbose)
 
+    // 
+    const here = process.cwd() + '/'
+    let pathSource = here
+
+    const content = fs.readFileSync(pathSource + 'package.json', 'utf8')
+    const packageJson = JSON.parse(content)
+    let {mantainer} = packageJson
+    if (mantainer === undefined) {
+      mantainer = packageJson.author
+    }
+
+    if (mantainer === undefined) {
+      mantainer = 'made on Perris\' Brewery'
+    }
+
+    const {description} = packageJson
+    const tarballsVersion = packageJson.version
+    const tarballsRelease = release
+    const tarballsName = packageJson.name
+    let tarballsNameVersioned = `${tarballsName}_${tarballsVersion}-${tarballsRelease}-linux-x64.tar.gz`
+    await exec(`mv ${here}dist/eggs-v10.0.60-*-linux-x64.tar.gz ${here}dist/${tarballsNameVersioned}`)
+    console.log(`created ${tarballsNameVersioned} in dist`)
   }
 }
