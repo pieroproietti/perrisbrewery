@@ -62,7 +62,8 @@ export default class Tarballs extends Command {
     const tarballsRelease = release
     const tarballsName = packageJson.name
     let tarballsNameVersioned = `${tarballsName}_${tarballsVersion}-${tarballsRelease}-linux-x64.tar.gz`
-    await exec(`mv ${here}dist/eggs-v10.0.60-*-linux-x64.tar.gz ${here}dist/${tarballsNameVersioned}`)
+    // await exec(`mv ${here}dist/eggs-v10.0.60-*-linux-x64.tar.gz ${here}dist/${tarballsNameVersioned}`)
+    await exec(`mv ${here}dist/eggs-v${tarballsVersion}-*-linux-x64.tar.gz ${here}dist/${tarballsNameVersioned}`)
     console.log(`created ${tarballsNameVersioned} in dist`)
   }
 }

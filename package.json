@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "Create manpages, insert preinst, postinst, prerm and postrm",
-  "version": "10.0.6",
+  "version": "10.1.0",
   "author": "Piero Proietti",
   "bin": {
     "pb": "./bin/run.js"
@@ -9,7 +9,7 @@
   "bugs": "https://github.com/pieroproietti/perrisbrewery/issues",
   "dependencies": {
     "@oclif/core": "^4.2.10",
-    "@oclif/plugin-autocomplete": "^3.2.26",
+    "@oclif/plugin-autocomplete": "^3.2.27",
     "@oclif/plugin-help": "^6.2.27",
     "@oclif/plugin-version": "^2.2.27",
     "@oclif/test": "^4.1.12",
@@ -27,7 +27,7 @@
     "shelljs": "0.8.5",
     "to-vfile": "6.1.0",
     "tslib": "2.8.1",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "unified": "^9.2.2"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     "eslint-config-prettier": "^9.1.0",
     "globby": "^14.1.0",
     "nps": "^5.10.0",
-    "oclif": "^4.17.41",
+    "oclif": "^4.17.43",
     "ts-node": "^10.9.2"
   },
   "dirname": "pb",
