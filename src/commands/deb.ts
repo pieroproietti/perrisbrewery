@@ -93,7 +93,6 @@ export default class Deb extends Command {
     // Crea configurazione per il pacchetto
     const here = process.cwd() + '/'
     let pathSource = here
-
     if (args.pathSource !== undefined) {
       if (pathSource.substring(pathSource.length, -1) === '/') {
         pathSource = args.pathSource
@@ -116,11 +115,6 @@ export default class Deb extends Command {
     if (!fs.existsSync(pathSource + 'package.json')) {
       console.log('package.json not found in ' + pathSource)
       process.exit(0)
-    }
-
-    // rimuove i file di lavoro
-    if (fs.existsSync(`${here}perrisbrewery/workdir/`)) {
-      await exec(`sudo rm -rf ${here}perrisbrewery/workdir/*`)
     }
 
     // Decido le architetture da costruire
@@ -167,13 +161,15 @@ export default class Deb extends Command {
       }
       const {files} = packageJson
       const binName = Object.keys(packageJson.bin)[0]
-      const destDir = `${here}/perrisbrewery/workdir/${packageNameVersioned}`
+
+      const packageRoot = path.join(here, 'dist')
+      const packageDir = path.join(packageRoot, packageNameVersioned)
 
       await Promise.all([
-        fsPromises.mkdir(path.join(destDir, 'DEBIAN'), {recursive: true}),
-        fsPromises.mkdir(path.join(destDir, 'usr', 'bin'), {recursive: true}),
-        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName), {recursive: true}),
-        fsPromises.mkdir(path.join(destDir, 'usr', 'lib', packageName, 'manpages', 'doc', 'man'), {recursive: true}),
+        fsPromises.mkdir(path.join(packageDir, 'DEBIAN'), {recursive: true}),
+        fsPromises.mkdir(path.join(packageDir, 'usr', 'bin'), {recursive: true}),
+        fsPromises.mkdir(path.join(packageDir, 'usr', 'lib', packageName), {recursive: true}),
+        fsPromises.mkdir(path.join(packageDir, 'usr', 'lib', packageName, 'manpages', 'doc', 'man'), {recursive: true}),
       ])
       this.log('creating package skel complete')
 
@@ -191,7 +187,7 @@ export default class Deb extends Command {
 
       // create debian control file
       const depends = array2comma(packages)
-      const template = fs.readFileSync('perrisbrewery/template/control.template', 'utf8')
+      const template = fs.readFileSync('./perrisbrewery/template/control.template', 'utf8')
       const view = {
         arch: debArch,
         depends,
@@ -202,29 +198,29 @@ export default class Deb extends Command {
         section: 'main',
         version: `${packageVersion}-${packageRelease}`,
       }
-      fs.writeFileSync(`${destDir}/DEBIAN/control`, mustache.render(template, view))
+      fs.writeFileSync(`${packageDir}/DEBIAN/control`, mustache.render(template, view))
       this.log('>>> creating debian control file complete')
 
       // include debian scripts
-      await exec(`cp ./perrisbrewery/scripts/* ${destDir}/DEBIAN/`, echo)
+      await exec(`cp ./perrisbrewery/scripts/* ${packageDir}/DEBIAN/`, echo)
       this.log('>>> included debian scripts: postinst, postrm, preinst, prerm')
 
       // create man page
-      await exec(`cp ./README.md  ${destDir}/DEBIAN/`, echo)
+      await exec(`cp ./README.md  ${packageDir}/DEBIAN/`, echo)
       const converter = new Converter(pathSource + '/README.md')
-      await converter.readme2md(destDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
-      await converter.md2man(destDir, packageName, packageVersion, binName, verbose)
-      await converter.md2html(destDir, packageName, packageVersion, binName,  verbose)
+      await converter.readme2md(packageDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
+      await converter.md2man(packageDir, packageName, packageVersion, binName, verbose)
+      await converter.md2html(packageDir, packageName, packageVersion, binName,  verbose)
       this.log('>>> created man page complete')
 
       if (manpages) {
         this.log('>>> refresh manpages on the sources')
         await exec(`rm -rf ${here}/manpages`, echo)
-        await exec(`cp ${destDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
+        await exec(`cp ${packageDir}/usr/lib/${packageName}/manpages ${here} -R`, echo)
       }
 
       // copia i file del pacchetto
-      const rootLib = `${destDir}/usr/lib/${packageName}`
+      const rootLib = `${packageDir}/usr/lib/${packageName}`
       await exec(`cp -r ${pathSource}/LICENSE ${rootLib}`, echo)
       await exec(`cp -r ${pathSource}/node_modules  ${rootLib}`, echo)
       await exec(`cp -r ${pathSource}/package.json  ${rootLib}`, echo)
@@ -259,22 +255,23 @@ export default class Deb extends Command {
       this.log(`>>> created exec ${binName}`)
 
       const curDir = process.cwd()
-      process.chdir(`${destDir}/usr/bin`)
-      await exec(`ln -s ../lib/${packageName}/bin/${binName} ${binName}`)
+      process.chdir(`${packageDir}/usr/bin`)
+      await exec(`ln -sf ../lib/${packageName}/bin/${binName} ${binName}`)
       process.chdir(curDir)
       this.log(`>>> created a link on /usr/bin/ for ${binName}`)
 
-      //const dpkgDeb = flags.compression ? `dpkg-deb --build "-Z${flags.compression}"` : 'dpkg-deb --build'
-      const dpkgDeb = `dpkg-deb --build`
-      await exec(`sudo chown -R root "${destDir}"`)
-      await exec(`sudo chgrp -R root "${destDir}"`)
-      await exec(`${dpkgDeb} "${destDir}"`)
+      // await exec(`sudo chown -R root "${packageDir}"`)
+      // await exec(`sudo chgrp -R root "${packageDir}"`)
+      await exec(`chown -R root "${packageDir}"`)
+      await exec(`chgrp -R root "${packageDir}"`)
+      await exec(`dpkg-deb --build ${packageDir}`)
+      await exec(`rm -rf ${packageRoot}/${packageNameVersioned}`)
       this.log(`finished building ${packageNameVersioned}.deb`)
 
-      this.log(`Creating sha256sum on ${destDir}.deb`)
+      this.log(`Creating sha256sum on ${packageDir}.deb`)
       let savedDir=process.cwd()
-      process.chdir(`${here}/perrisbrewery/workdir/`)
-      await exec(`sha256sum ${packageNameVersioned}.deb > ${packageNameVersioned}.sha256`)
+      process.chdir(packageRoot)
+      await exec(`sha256sum ${packageNameVersioned}.deb > ${packageNameVersioned}.deb.sha256`)
       process.chdir(savedDir)
     }
 
