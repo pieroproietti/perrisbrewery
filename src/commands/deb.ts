@@ -260,12 +260,10 @@ export default class Deb extends Command {
       process.chdir(curDir)
       this.log(`>>> created a link on /usr/bin/ for ${binName}`)
 
-      // await exec(`sudo chown -R root "${packageDir}"`)
-      // await exec(`sudo chgrp -R root "${packageDir}"`)
-      await exec(`chown -R root "${packageDir}"`)
-      await exec(`chgrp -R root "${packageDir}"`)
+      await exec(`sudo chown -R root "${packageDir}"`)
+      await exec(`sudo chgrp -R root "${packageDir}"`)
       await exec(`dpkg-deb --build ${packageDir}`)
-      await exec(`rm -rf ${packageRoot}/${packageNameVersioned}`)
+      await exec(`sudo rm -rf ${packageRoot}/${packageNameVersioned}`)
       this.log(`finished building ${packageNameVersioned}.deb`)
 
       this.log(`Creating sha256sum on ${packageDir}.deb`)
