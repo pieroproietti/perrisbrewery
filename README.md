@@ -24,38 +24,8 @@ pnpm deb
 
 # Commands
 <!-- commands -->
-* [`pb deb [PATHSOURCE]`](#pb-deb-pathsource)
 * [`pb help [COMMAND]`](#pb-help-command)
-* [`pb tarballs [TARBALLS]`](#pb-tarballs-tarballs)
 * [`pb version`](#pb-version)
-
-## `pb deb [PATHSOURCE]`
-
-Pack CLI into debian package.
-
-```
-USAGE
-  $ pb deb [PATHSOURCE] [-h] [-a] [-c <value>] [-m] [-r <value>] [-M] [-v]
-
-ARGUMENTS
-  PATHSOURCE  pathSource
-
-FLAGS
-  -M, --manpages          refresh manpages on the sources
-  -a, --all               all architectures
-  -c, --codename=<value>  codename
-  -h, --help              Show CLI help.
-  -m, --mantain
-  -r, --release=<value>   release
-  -v, --verbose           verbose
-
-DESCRIPTION
-  Pack CLI into debian package.
-
-  Create a deb package from your npm package
-```
-
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v10.1.2/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
@@ -76,30 +46,6 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.27/src/commands/help.ts)_
-
-## `pb tarballs [TARBALLS]`
-
-rename tarballs with release.
-
-```
-USAGE
-  $ pb tarballs [TARBALLS] [-h] [-r <value>] [-v]
-
-ARGUMENTS
-  TARBALLS  pathTarballs
-
-FLAGS
-  -h, --help             Show CLI help.
-  -r, --release=<value>  release
-  -v, --verbose          verbose
-
-DESCRIPTION
-  rename tarballs with release.
-
-  Tarballs
-```
-
-_See code: [src/commands/tarballs.ts](https://github.com/pieroproietti/perrisbrewery/blob/v10.1.2/src/commands/tarballs.ts)_
 
 ## `pb version`
 
