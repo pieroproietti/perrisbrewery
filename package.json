@@ -37,7 +37,6 @@
     "@typescript-eslint/parser": "^8.31.0",
     "eslint": "^9.25.1",
     "eslint-config-oclif": "^6.0.50",
-    "eslint-config-oclif-typescript": "^3.1.14",
     "eslint-config-prettier": "^10.1.2",
     "globby": "^14.1.0",
     "nps": "^5.10.0",
