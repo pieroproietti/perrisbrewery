@@ -15,7 +15,6 @@
     "@oclif/test": "^4.1.12",
     "chalk": "^4.1.2",
     "fs-extra": "^11.3.0",
-    "inquirer": "8.2.4",
     "js-yaml": "^4.1.0",
     "mustache": "^4.2.0",
     "rehype-document": "^5.1.0",
