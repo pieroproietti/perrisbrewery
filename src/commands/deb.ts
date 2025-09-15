@@ -12,30 +12,6 @@ import Utils from '../classes/utils'
 import { IDependency } from '../interfaces/i-dependency'
 import { exec } from '../lib/utils'
 
-// Lo script per l'eseguibile binario rimane invariato
-const scripts = {
-  /* eslint-disable no-useless-escape */
-  bin: (config: Interfaces.Config) => `#!/usr/bin/env bash
-set -e
-echoerr() { echo "$@" 1>&2; }
-get_script_dir () {
- SOURCE="\${BASH_SOURCE[0]}"
- # While \$SOURCE is a symlink, resolve it
- while [ -h "\$SOURCE" ]; do
-   DIR="\$( cd -P "\$( dirname "\$SOURCE" )" && pwd )"
-   SOURCE="\$( readlink "\$SOURCE" )"
-   # If \$SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
-   [[ \$SOURCE != /* ]] && SOURCE="\$DIR/\$SOURCE"
- done
- DIR="\$( cd -P "\$( dirname "\$SOURCE" )" && pwd )"
- echo "\$DIR"
-}
-DIR=\$(get_script_dir)
-export ${config.scopedEnvVarKey('UPDATE_INSTRUCTIONS')}="update with \\"sudo apt update && sudo apt install ${config.bin
-  }\\""
-\$DIR/node \$DIR/run "\$@"
-`,
-}
 
 /**
  * Comando per creare pacchetti Debian
@@ -206,14 +182,10 @@ export default class Deb extends Command {
         }
     }
 
-    // Crea il link simbolico per l'eseguibile
-    await exec(`ln -sf ../lib/${packageName}/bin/${binName} ${path.join(packageDir, 'usr', 'bin', binName)}`)
-    
-    // Crea lo script binario
-    fs.writeFileSync(path.join(rootLib, 'bin', binName), scripts.bin(this.config))
-    await fsPromises.chmod(path.join(rootLib, 'bin', binName), 0o755)
-    this.log('Binary script and symlinks created.')
 
+    // Crea il link simbolico per l'eseguibile
+    await exec(`ln -sf ../lib/${packageName}/bin/run.js ${path.join(packageDir, 'usr', 'bin', binName)}`)
+    
     // Imposta i permessi corretti e builda il pacchetto
     this.log('Setting permissions and building package...')
     await exec(`sudo chown -R root:root "${packageDir}"`)
