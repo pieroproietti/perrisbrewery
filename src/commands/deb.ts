@@ -116,7 +116,7 @@ export default class Deb extends Command {
     const packageName = packageJson.name
     const mantainer = packageJson.mantainer ?? packageJson.author ?? "Perris' Brewery"
     const binName = Object.keys(packageJson.bin)[0]
-    const packageNameVersioned = `${packageName}_${packageVersion}-${release}_${debArch}`
+    const packageNameVersioned = `${packageName}-${packageVersion}-${release}-${debArch}`
 
     // Il pacchetto viene assemblato dentro la directory `build`
     const packageDir = path.join(tempBuildRoot, packageNameVersioned)
