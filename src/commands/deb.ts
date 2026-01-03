@@ -87,9 +87,14 @@ export default class Deb extends Command {
     // --- FINE LOGICA DIRECTORY ---
 
     // Determina le architetture da costruire
-    let debArchs = [process.arch === 'x64' ? 'amd64' : process.arch]
-    if (all) {
-      debArchs = ['amd64', 'arm64', 'i386']
+    let debArchs = ['']
+    if (process.arch !== 'riscv64') {
+      debArchs = [process.arch === 'x64' ? 'amd64' : process.arch]
+      if (all) {
+        debArchs = ['amd64', 'arm64', 'i386']
+      }
+    } else {
+      debArchs = ['riscv64']
     }
     
     // Avvia il ciclo di build per ogni architettura

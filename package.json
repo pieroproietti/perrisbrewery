@@ -1,21 +1,21 @@
 {
   "name": "perrisbrewery",
   "description": "Create manpages, insert preinst, postinst, prerm and postrm",
-  "version": "25.9.16",
+  "version": "26.1.2",
   "author": "Piero Proietti",
   "bin": {
     "pb": "./bin/run.js"
   },
   "bugs": "https://github.com/pieroproietti/perrisbrewery/issues",
   "dependencies": {
-    "@oclif/core": "^4.5.3",
-    "@oclif/plugin-autocomplete": "^3.2.34",
-    "@oclif/plugin-help": "^6.2.33",
-    "@oclif/plugin-version": "^2.2.33",
-    "@oclif/test": "^4.1.14",
+    "@oclif/core": "^4.8.0",
+    "@oclif/plugin-autocomplete": "^3.2.39",
+    "@oclif/plugin-help": "^6.2.36",
+    "@oclif/plugin-version": "^2.2.36",
+    "@oclif/test": "^4.1.15",
     "chalk": "^4.1.2",
-    "fs-extra": "^11.3.1",
-    "js-yaml": "^4.1.0",
+    "fs-extra": "^11.3.3",
+    "js-yaml": "^4.1.1",
     "mustache": "^4.2.0",
     "rehype-document": "^5.1.0",
     "rehype-format": "^3.1.0",
@@ -26,7 +26,7 @@
     "shelljs": "0.9.2",
     "to-vfile": "6.1.0",
     "tslib": "2.8.1",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.3",
     "unified": "^9.2.2"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "@types/shelljs": "^0.8.15",
     "@typescript-eslint/parser": "^8.43.0",
     "eslint": "^9.35.0",
-    "eslint-config-oclif": "^6.0.104",
+    "eslint-config-oclif": "^6.0.128",
     "eslint-config-prettier": "^10.1.8",
     "globby": "^14.1.0",
     "nps": "^5.10.0",
