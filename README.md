@@ -38,7 +38,7 @@ USAGE
   $ pb deb [PATHSOURCE] [-h] [-a] [-r <value>] [-M] [-v]
 
 ARGUMENTS
-  PATHSOURCE  pathSource
+  [PATHSOURCE]  pathSource
 
 FLAGS
   -M, --manpages         refresh manpages on the sources
@@ -53,7 +53,7 @@ DESCRIPTION
   Create a deb package from your npm package
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v25.9.16/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v26.1.2/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
@@ -64,7 +64,7 @@ USAGE
   $ pb help [COMMAND...] [-n]
 
 ARGUMENTS
-  COMMAND...  Command to show help for.
+  [COMMAND...]  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -73,7 +73,7 @@ DESCRIPTION
   Display help for pb.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.33/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.36/src/commands/help.ts)_
 
 ## `pb tarballs [TARBALLS]`
 
@@ -84,7 +84,7 @@ USAGE
   $ pb tarballs [TARBALLS] [-h] [-r <value>] [-v]
 
 ARGUMENTS
-  TARBALLS  pathTarballs
+  [TARBALLS]  pathTarballs
 
 FLAGS
   -h, --help             Show CLI help.
@@ -97,7 +97,7 @@ DESCRIPTION
   Tarballs
 ```
 
-_See code: [src/commands/tarballs.ts](https://github.com/pieroproietti/perrisbrewery/blob/v25.9.16/src/commands/tarballs.ts)_
+_See code: [src/commands/tarballs.ts](https://github.com/pieroproietti/perrisbrewery/blob/v26.1.2/src/commands/tarballs.ts)_
 
 ## `pb version`
 
@@ -117,7 +117,7 @@ FLAG DESCRIPTIONS
     Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.33/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.36/src/commands/version.ts)_
 <!-- commandsstop -->
 
 # More informations
