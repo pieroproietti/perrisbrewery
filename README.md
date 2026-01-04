@@ -53,7 +53,7 @@ DESCRIPTION
   Create a deb package from your npm package
 ```
 
-_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v26.1.2/src/commands/deb.ts)_
+_See code: [src/commands/deb.ts](https://github.com/pieroproietti/perrisbrewery/blob/v26.1.3/src/commands/deb.ts)_
 
 ## `pb help [COMMAND]`
 
@@ -97,7 +97,7 @@ DESCRIPTION
   Tarballs
 ```
 
-_See code: [src/commands/tarballs.ts](https://github.com/pieroproietti/perrisbrewery/blob/v26.1.2/src/commands/tarballs.ts)_
+_See code: [src/commands/tarballs.ts](https://github.com/pieroproietti/perrisbrewery/blob/v26.1.3/src/commands/tarballs.ts)_
 
 ## `pb version`
 
