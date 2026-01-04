@@ -54,7 +54,7 @@ export default class Deb extends Command {
     // Imposta i percorsi di base
     this.here = process.cwd()
     this.pathSource = args.pathSource ? path.resolve(args.pathSource) : this.here
-    
+
     // Gestione primo avvio e creazione configurazione perrisbrewery
     if (!fs.existsSync(path.join(this.here, 'perrisbrewery'))) {
       this.log('perrisbrewery configurations not found, creating sample...')
@@ -86,17 +86,28 @@ export default class Deb extends Command {
     }
     // --- FINE LOGICA DIRECTORY ---
 
-    // Determina le architetture da costruire
-    let debArchs = ['']
-    if (process.arch !== 'riscv64') {
-      debArchs = [process.arch === 'x64' ? 'amd64' : process.arch]
-      if (all) {
-        debArchs = ['amd64', 'arm64', 'i386']
-      }
+    // 1. debian arch mapping
+    const DEBIAN_MAP = {
+      'x64': 'amd64',
+      'arm64': 'arm64',
+      'ia32': 'i386',
+      'riscv64': 'riscv64'
+    } as const; // 'as const' rende i valori immutabili e i tipi precisi
+
+    let debArchs: string[];
+
+    if (all) {
+      debArchs = ['amd64', 'arm64', 'i386', 'riscv64'];
     } else {
-      debArchs = ['riscv64']
+      const current = process.arch;
+      if (current in DEBIAN_MAP) {
+        debArchs = [DEBIAN_MAP[current as keyof typeof DEBIAN_MAP]];
+      } else {
+        console.log(`Warning: architecture '${current}' is not included on Debian. Process will end!.`);
+        process.exit(0);
+      }
     }
-    
+
     // Avvia il ciclo di build per ogni architettura
     for (const debArch of debArchs) {
       await this.createPackage(debArch, release, manpages, verbose, tempBuildRoot, finalReleasesDir)
@@ -179,18 +190,18 @@ export default class Deb extends Command {
     await exec(`cp -r ${path.join(this.pathSource, 'LICENSE')} ${rootLib}`, echo)
     await exec(`cp -r ${path.join(this.pathSource, 'node_modules')} ${rootLib}`, echo)
     await exec(`cp -r ${path.join(this.pathSource, 'package.json')} ${rootLib}`, echo)
-    
+
     // Copia lock files se esistono
     for (const lockFile of ['pnpm-lock.yaml', 'yarn.lock', 'npm-shrinkwrap.json']) {
-        if (fs.existsSync(path.join(this.pathSource, lockFile))) {
-            await exec(`cp -r ${path.join(this.pathSource, lockFile)} ${rootLib}`, echo)
-        }
+      if (fs.existsSync(path.join(this.pathSource, lockFile))) {
+        await exec(`cp -r ${path.join(this.pathSource, lockFile)} ${rootLib}`, echo)
+      }
     }
 
 
     // Crea il link simbolico per l'eseguibile
     await exec(`ln -sf ../lib/${packageName}/bin/run.js ${path.join(packageDir, 'usr', 'bin', binName)}`)
-    
+
     // Imposta i permessi corretti e builda il pacchetto
     this.log('Setting permissions and building package...')
     await exec(`sudo chown -R root:root "${packageDir}"`)
