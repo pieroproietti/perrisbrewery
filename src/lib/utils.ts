@@ -26,13 +26,6 @@ import {IExec} from '../interfaces/index'
  * @returns
  */
 export async function exec(command: string, {capture = false, echo = false, ignore = false} = {}): Promise<IExec> {
-  /**
-   * You could wrap spawn in a promise,
-   * listen to exit event,
-   * and resolve when it happens.
-   *
-   * That should play nicely with oclif/core.
-   */
   return new Promise((resolve, reject) => {
     if (echo) {
       console.log(command)
@@ -41,9 +34,6 @@ export async function exec(command: string, {capture = false, echo = false, igno
     const child = spawn('bash', ['-c', command], {
       stdio: ignore ? 'ignore' : (capture ? 'pipe' : 'inherit'),
     })
-
-    // const spawn = require('child_process').spawn
-    // child.stdout.on('data', (data: string) => {
 
     let stdout = ''
     if (capture) {
@@ -61,7 +51,11 @@ export async function exec(command: string, {capture = false, echo = false, igno
     // otherwise null. If the process terminated due to receipt of a signal, signal is the string name of the signal, otherwise null.
     // One of the two will always be non-null.
     child.on('exit', (code: number) => {
-      resolve({code, data: stdout})
+       if (code !== 0) {
+        reject({ code, error: `Command failed with exit code ${code}` })
+      } else {
+        resolve({ code, data: stdout })
+      }
     })
 
     // end promise

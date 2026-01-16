@@ -7,7 +7,8 @@
  */
 
 import chalk from 'chalk'
-import shx from 'shelljs'
+
+
 
 const pjson = require('../../package.json')
 

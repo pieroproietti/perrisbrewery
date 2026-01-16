@@ -1,15 +1,12 @@
 import {
-  Args, Command, Flags, Interfaces, // <-- CORREZIONE 1: Aggiunto 'Interfaces'
+  Args, Command, Flags,
 } from '@oclif/core'
 import fs from 'fs'
-import yaml from 'js-yaml'
-import mustache from 'mustache'
 import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
 
-import Converter from '../classes/converter'
 import Utils from '../classes/utils'
-import { IDependency } from '../interfaces/i-dependency'
+import { DebBuilder } from '../classes/deb-builder'
 import { exec } from '../lib/utils'
 
 
@@ -92,7 +89,7 @@ export default class Deb extends Command {
       'arm64': 'arm64',
       'ia32': 'i386',
       'riscv64': 'riscv64'
-    } as const; // 'as const' rende i valori immutabili e i tipi precisi
+    } as const;
 
     let debArchs: string[];
 
@@ -108,117 +105,14 @@ export default class Deb extends Command {
       }
     }
 
+    const builder = new DebBuilder(this.pathSource, this.here, verbose, tempBuildRoot, finalReleasesDir)
+
     // Avvia il ciclo di build per ogni architettura
     for (const debArch of debArchs) {
-      await this.createPackage(debArch, release, manpages, verbose, tempBuildRoot, finalReleasesDir)
+      await builder.build(debArch, release, manpages)
     }
 
     this.log('All builds complete!')
   }
-
-  /**
-   * Crea un singolo pacchetto per una specifica architettura
-   */
-  async createPackage(debArch: string, release: string, manpages: boolean, verbose: boolean, tempBuildRoot: string, finalReleasesDir: string) {
-    const echo = Utils.setEcho(verbose)
-
-    this.log('')
-    this.log(`--- Building for architecture: ${debArch} ---`)
-
-    const packageJsonContent = fs.readFileSync(path.join(this.pathSource, 'package.json'), 'utf8')
-    const packageJson = JSON.parse(packageJsonContent)
-
-    const { description, version: packageVersion, files } = packageJson
-    const packageName = packageJson.name
-    const mantainer = packageJson.mantainer ?? packageJson.author ?? "Perris' Brewery"
-    const binName = Object.keys(packageJson.bin)[0]
-    const packageNameVersioned = `${packageName}-${packageVersion}-${release}-${debArch}`
-
-    // Il pacchetto viene assemblato dentro la directory `build`
-    const packageDir = path.join(tempBuildRoot, packageNameVersioned)
-    const rootLib = path.join(packageDir, 'usr', 'lib', packageName)
-
-    // Crea la struttura di base del pacchetto
-    await Promise.all([
-      fsPromises.mkdir(path.join(packageDir, 'DEBIAN'), { recursive: true }),
-      fsPromises.mkdir(path.join(packageDir, 'usr', 'bin'), { recursive: true }),
-      fsPromises.mkdir(rootLib, { recursive: true }),
-      fsPromises.mkdir(path.join(rootLib, 'manpages', 'doc', 'man'), { recursive: true }),
-    ])
-    this.log('Package skeleton created.')
-
-    // Gestione dipendenze
-    const dependenciesFile = path.join(this.here, 'perrisbrewery', 'template', 'dependencies.yaml')
-    const fileContents = fs.readFileSync(dependenciesFile, 'utf8')
-    const dep = yaml.load(fileContents) as IDependency
-    const packages = [...dep.common, ...(dep.arch[debArch] || [])].sort()
-
-    // Crea il file DEBIAN/control
-    const template = fs.readFileSync(path.join(this.here, 'perrisbrewery', 'template', 'control.template'), 'utf8')
-    fs.writeFileSync(path.join(packageDir, 'DEBIAN', 'control'), mustache.render(template, {
-      arch: debArch,
-      depends: packages.join(', '),
-      description,
-      mantainer,
-      name: packageName,
-      version: `${packageVersion}-${release}`,
-    }))
-    this.log('DEBIAN/control file created.')
-
-    // Copia script di post-installazione, etc.
-    await exec(`cp ${path.join(this.here, 'perrisbrewery', 'scripts', '*')} ${path.join(packageDir, 'DEBIAN/')}`, echo)
-
-    // Crea man page
-    const converter = new Converter(path.join(this.pathSource, 'README.md'))
-    await converter.readme2md(packageDir, packageName, packageVersion, binName, packageNameVersioned, verbose)
-    await converter.md2man(packageDir, packageName, packageVersion, binName, verbose)
-    await converter.md2html(packageDir, packageName, packageVersion, binName, verbose)
-    this.log('Man page created.')
-
-    // Aggiorna le man page nei sorgenti se richiesto
-    if (manpages) {
-      this.log('Refreshing manpages in source directory...')
-      await exec(`rm -rf ${path.join(this.here, 'manpages')}`, echo)
-      await exec(`cp -r ${path.join(rootLib, 'manpages')} ${this.here}`, echo)
-    }
-
-    // Copia i file del pacchetto (da `dist`, `node_modules`, ecc.)
-    this.log('Copying application files...')
-    for (const file of files) {
-      await exec(`cp -r ${path.join(this.pathSource, file)} ${rootLib}/`, echo)
-    }
-    await exec(`cp -r ${path.join(this.pathSource, 'LICENSE')} ${rootLib}`, echo)
-    await exec(`cp -r ${path.join(this.pathSource, 'node_modules')} ${rootLib}`, echo)
-    await exec(`cp -r ${path.join(this.pathSource, 'package.json')} ${rootLib}`, echo)
-
-    // Copia lock files se esistono
-    for (const lockFile of ['pnpm-lock.yaml', 'yarn.lock', 'npm-shrinkwrap.json']) {
-      if (fs.existsSync(path.join(this.pathSource, lockFile))) {
-        await exec(`cp -r ${path.join(this.pathSource, lockFile)} ${rootLib}`, echo)
-      }
-    }
-
-
-    // Crea il link simbolico per l'eseguibile
-    await exec(`ln -sf ../lib/${packageName}/bin/run.js ${path.join(packageDir, 'usr', 'bin', binName)}`)
-
-    // Imposta i permessi corretti e builda il pacchetto
-    this.log('Setting permissions and building package...')
-    await exec(`sudo chown -R root:root "${packageDir}"`)
-    // --- CORREZIONE 2: Cambiamo cartella con 'cd' perché 'exec' non supporta l'opzione 'cwd' ---
-    await exec(`cd ${tempBuildRoot} && dpkg-deb --build ${path.basename(packageDir)}`)
-    await exec(`sudo rm -rf ${packageDir}`) // Pulisce la dir di assemblaggio per questa arch
-    this.log(`Package ${packageNameVersioned}.deb built successfully.`)
-
-    // Crea il checksum e sposta i file finali
-    this.log(`Creating checksum and moving to ${finalReleasesDir}...`)
-    const originalDir = process.cwd()
-    process.chdir(tempBuildRoot)
-    await exec(`sha256sum ${packageNameVersioned}.deb > ${packageNameVersioned}.deb.sha256`)
-    await exec(`mv ${packageNameVersioned}.deb ${finalReleasesDir}/`)
-    await exec(`mv ${packageNameVersioned}.deb.sha256 ${finalReleasesDir}/`)
-    process.chdir(originalDir)
-
-    this.log(`--- Finished ${debArch} ---`)
-  }
 }
+
