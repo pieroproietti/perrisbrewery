@@ -15,9 +15,9 @@
  * https://github.com/AstarNetwork/swanky-cli/blob/master/src/commands/compile/index.ts
  */
 
-import {spawn} from 'child_process'
+import { spawn } from 'child_process'
 
-import {IExec} from '../interfaces/index'
+import { IExec } from '../interfaces/index.js'
 
 /**
  *
@@ -25,7 +25,7 @@ import {IExec} from '../interfaces/index'
  * @param param1
  * @returns
  */
-export async function exec(command: string, {capture = false, echo = false, ignore = false} = {}): Promise<IExec> {
+export async function exec(command: string, { capture = false, echo = false, ignore = false } = {}): Promise<IExec> {
   return new Promise((resolve, reject) => {
     if (echo) {
       console.log(command)
@@ -44,14 +44,14 @@ export async function exec(command: string, {capture = false, echo = false, igno
 
     // 'error' event
     child.on('error', (error: string) => {
-      reject({code: 1, error})
+      reject({ code: 1, error })
     })
 
     // The 'exit' event is emitted after the child process ends. If the process exited, code is the final exit code of the process,
     // otherwise null. If the process terminated due to receipt of a signal, signal is the string name of the signal, otherwise null.
     // One of the two will always be non-null.
     child.on('exit', (code: number) => {
-       if (code !== 0) {
+      if (code !== 0) {
         reject({ code, error: `Command failed with exit code ${code}` })
       } else {
         resolve({ code, data: stdout })

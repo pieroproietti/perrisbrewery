@@ -2,15 +2,20 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
-    "lib": ["es2022"],
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "lib": [
+      "es2022"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "dist",
     "resolveJsonModule": true,
     "rootDir": "src",
     "strict": true,
-    "target": "es2022",    
-    "typeRoots": ["node_modules/@types", "./src/types"],
+    "target": "es2022",
+    "typeRoots": [
+      "node_modules/@types",
+      "./src/types"
+    ],
   },
   "include": [
     "src/**/*"

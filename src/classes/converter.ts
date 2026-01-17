@@ -9,11 +9,11 @@ import rehypeStringify from 'rehype-stringify'
 import remarkMan from 'remark-man'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import {read, write} from 'to-vfile'
-import unified from 'unified'
+import { read, write } from 'to-vfile'
+import { unified } from 'unified'
 
-import {exec} from '../lib/utils'
-import Utils from './utils'
+import { exec } from '../lib/utils.js'
+import Utils from './utils.js'
 
 /**
  * class Man
@@ -39,12 +39,12 @@ export default class Converter {
     const extname = '.html'
 
     const file = await unified()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(rehypeDocument)
-    .use(rehypeFormat)
-    .use(rehypeStringify)
-    .process(await read(source))
+      .use(remarkParse)
+      .use(remarkRehype)
+      .use(rehypeDocument)
+      .use(rehypeFormat)
+      .use(rehypeStringify)
+      .process(await read(source))
 
     file.dirname = dirname
     file.basename = basename
@@ -68,9 +68,9 @@ export default class Converter {
     const extname = '.roll'
 
     const file = await unified()
-    .use(remarkParse)
-    .use(remarkMan)
-    .process(await read(source))
+      .use(remarkParse)
+      .use(remarkMan)
+      .process(await read(source))
 
     file.dirname = dirname
     file.basename = basename

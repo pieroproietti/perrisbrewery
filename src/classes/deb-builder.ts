@@ -3,10 +3,10 @@ import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
 import yaml from 'js-yaml'
 import mustache from 'mustache'
-import { IDependency } from '../interfaces/i-dependency'
-import { exec } from '../lib/utils'
-import Converter from './converter'
-import Utils from './utils'
+import { IDependency } from '../interfaces/i-dependency.js'
+import { exec } from '../lib/utils.js'
+import Converter from './converter.js'
+import Utils from './utils.js'
 
 export class DebBuilder {
   private echo: object
@@ -104,31 +104,31 @@ export class DebBuilder {
     // Build package (SUDO required)
     console.log('Setting permissions and building package...')
     await exec(`sudo chown -R root:root "${packageDir}"`)
-    
+
     // Using simple exec for dpkg-deb command inside temp dir
     const originalDir = process.cwd()
     process.chdir(this.tempBuildRoot)
     try {
-        await exec(`dpkg-deb --build ${path.basename(packageDir)}`)
+      await exec(`dpkg-deb --build ${path.basename(packageDir)}`)
     } finally {
-        process.chdir(originalDir)
+      process.chdir(originalDir)
     }
-    
+
     await exec(`sudo rm -rf ${packageDir}`)
     console.log(`Package ${packageNameVersioned}.deb built successfully.`)
 
     // Checksum and move
     console.log(`Creating checksum and moving to ${this.finalReleasesDir}...`)
-    
+
     process.chdir(this.tempBuildRoot)
     try {
-        await exec(`sha256sum ${packageNameVersioned}.deb > ${packageNameVersioned}.deb.sha256`)
-        await exec(`mv ${packageNameVersioned}.deb ${this.finalReleasesDir}/`)
-        await exec(`mv ${packageNameVersioned}.deb.sha256 ${this.finalReleasesDir}/`)
+      await exec(`sha256sum ${packageNameVersioned}.deb > ${packageNameVersioned}.deb.sha256`)
+      await exec(`mv ${packageNameVersioned}.deb ${this.finalReleasesDir}/`)
+      await exec(`mv ${packageNameVersioned}.deb.sha256 ${this.finalReleasesDir}/`)
     } finally {
-        process.chdir(originalDir)
+      process.chdir(originalDir)
     }
-    
+
     console.log(`--- Finished ${debArch} ---`)
   }
 }

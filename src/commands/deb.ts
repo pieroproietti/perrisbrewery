@@ -4,10 +4,14 @@ import {
 import fs from 'fs'
 import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-import Utils from '../classes/utils'
-import { DebBuilder } from '../classes/deb-builder'
-import { exec } from '../lib/utils'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+import Utils from '../classes/utils.js'
+import { DebBuilder } from '../classes/deb-builder.js'
+import { exec } from '../lib/utils.js'
 
 
 /**

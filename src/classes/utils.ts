@@ -10,6 +10,8 @@ import chalk from 'chalk'
 
 
 
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
 const pjson = require('../../package.json')
 
 /**
@@ -22,9 +24,9 @@ export default class Utils {
    * @param verbose
    */
   static setEcho(verbose = false): object {
-    let echo = {echo: false, ignore: true}
+    let echo = { echo: false, ignore: true }
     if (verbose) {
-      echo = {echo: true, ignore: false}
+      echo = { echo: true, ignore: false }
     }
 
     return echo
@@ -42,8 +44,8 @@ export default class Utils {
     console.log('>>> P E R R I\'s brewery <<<')
     console.log('===========================')
     console.log(chalk.bgGreen.whiteBright('      ' + pjson.name + '      ')
-         + chalk.bgWhite.blue('  man & scripts in .deb  ')
-         + chalk.bgRed.whiteBright('       ver. ' + pjson.version + '       '))
+      + chalk.bgWhite.blue('  man & scripts in .deb  ')
+      + chalk.bgRed.whiteBright('       ver. ' + pjson.version + '       '))
     console.log('command: ' + chalk.bgBlack.white(command) + '\n')
   }
 }
