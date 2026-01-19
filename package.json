@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "Create manpages, insert preinst, postinst, prerm and postrm",
-  "version": "26.1.17",
+  "version": "26.1.20",
   "type": "module",
   "author": "Piero Proietti",
   "bin": {
@@ -36,11 +36,11 @@
     "@types/node": "^25.0.9",
     "@typescript-eslint/parser": "^8.51.0",
     "eslint": "^9.39.2",
-    "eslint-config-oclif": "^6.0.128",
+    "eslint-config-oclif": "^6.0.132",
     "eslint-config-prettier": "^10.1.8",
     "globby": "^16.1.0",
     "nps": "^5.10.0",
-    "oclif": "^4.22.61",
+    "oclif": "^4.22.67",
     "ts-node": "^10.9.2"
   },
   "dirname": "pb",
