@@ -5,7 +5,7 @@ Compatible with oclif 4.x, build debian packages from dist, create manpage from 
 
 Add the package to your package.json as devDependencies
 ```
-  "perrisbrewery": "^9.7.12*,
+  "perrisbrewery": "^26.1.20",
 ```
 
 and create a script deb:
@@ -131,4 +131,4 @@ You can contact me by [mail](mailto://pieroproietti@gmail.com) or follow me on
 [twitter](https://twitter.com/pieroproietti).
 
 # Copyright and licenses
-Copyright (c) 2017, 2025 [Piero Proietti](https://penguins-eggs.net/about-me.html), dual licensed under the MIT or GPL Version 2 licenses.
+Copyright (c) 2017, 2026 [Piero Proietti](https://penguins-eggs.net/about-me.html), dual licensed under the MIT or GPL Version 2 licenses.
