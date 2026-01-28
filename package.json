@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "Create manpages, insert preinst, postinst, prerm and postrm",
-  "version": "26.1.20",
+  "version": "26.1.28",
   "type": "module",
   "author": "Piero Proietti",
   "bin": {
@@ -10,10 +10,10 @@
   "bugs": "https://github.com/pieroproietti/perrisbrewery/issues",
   "dependencies": {
     "@oclif/core": "^4.8.0",
-    "@oclif/plugin-autocomplete": "^3.2.39",
-    "@oclif/plugin-help": "^6.2.36",
+    "@oclif/plugin-autocomplete": "^3.2.40",
+    "@oclif/plugin-help": "^6.2.37",
     "@oclif/plugin-version": "^2.2.36",
-    "@oclif/test": "^4.1.15",
+    "@oclif/test": "^4.1.16",
     "chalk": "^5.6.2",
     "fs-extra": "^11.3.3",
     "js-yaml": "^4.1.1",
@@ -33,14 +33,14 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/mustache": "^4.2.6",
-    "@types/node": "^25.0.9",
-    "@typescript-eslint/parser": "^8.51.0",
+    "@types/node": "^25.0.10",
+    "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.39.2",
-    "eslint-config-oclif": "^6.0.132",
+    "eslint-config-oclif": "^6.0.135",
     "eslint-config-prettier": "^10.1.8",
     "globby": "^16.1.0",
     "nps": "^5.10.0",
-    "oclif": "^4.22.67",
+    "oclif": "^4.22.70",
     "ts-node": "^10.9.2"
   },
   "dirname": "pb",
