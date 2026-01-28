@@ -32,7 +32,7 @@ export class DebBuilder {
     const packageName = packageJson.name
     const mantainer = packageJson.mantainer ?? packageJson.author ?? "Perris' Brewery"
     const binName = Object.keys(packageJson.bin)[0]
-    const packageNameVersioned = `${packageName}-${packageVersion}-${release}-${debArch}`
+    const packageNameVersioned = `${packageName}_${packageVersion}-${release}_${debArch}`
 
     // Package build directory
     const packageDir = path.join(this.tempBuildRoot, packageNameVersioned)
