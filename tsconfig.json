@@ -2,9 +2,6 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
-    "lib": [
-      "es2022"
-    ],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
@@ -12,10 +9,10 @@
     "rootDir": "src",
     "strict": true,
     "target": "es2022",
-    "typeRoots": [
-      "node_modules/@types",
-      "./src/types"
+    "types": [
+      "node"
     ],
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"

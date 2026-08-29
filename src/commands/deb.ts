@@ -95,7 +95,7 @@ export default class Deb extends Command {
       'riscv64': 'riscv64'
     } as const;
 
-    let debArchs: string[];
+    let debArchs: string[] = [];
 
     if (all) {
       debArchs = ['amd64', 'arm64', 'i386', 'riscv64'];
