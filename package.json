@@ -1,7 +1,7 @@
 {
   "name": "perrisbrewery",
   "description": "Create manpages, insert preinst, postinst, prerm and postrm",
-  "version": "26.8.29",
+  "version": "26.8.29-1",
   "type": "module",
   "author": "Piero Proietti",
   "bin": {

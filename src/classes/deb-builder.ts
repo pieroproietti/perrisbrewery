@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as fsPromises from 'node:fs/promises'
 import * as path from 'node:path'
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 import mustache from 'mustache'
 import { IDependency } from '../interfaces/i-dependency.js'
 import { exec } from '../lib/utils.js'
